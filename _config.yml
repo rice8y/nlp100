@@ -15,9 +15,9 @@ latex:
 #   - references.bib
 
 repository:
-  url: https://github.com/rice8y/hello
+  url: https://github.com/rice8y/nlp100
   path_to_book: docs  
-  branch: gh-pages  
+  branch: main
 
 html:
   # favicon                   : "_images/icon.png"  
@@ -30,7 +30,7 @@ html:
         Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
         </div>
         
-  baseurl                   : https://rice8y.github.io/hello/
+  baseurl                   : https://rice8y.github.io/nlp100/
   extra_footer: |
         <div>
         <script src="https://utteranc.es/client.js"
