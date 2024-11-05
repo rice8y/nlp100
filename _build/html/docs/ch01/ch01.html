@@ -34,10 +34,10 @@
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=4c969af8" />
-    <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/proof.css?v=b4b7a797" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- So that users can add custom icons -->
@@ -408,14 +408,15 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">01. 「パタトクカシーー」</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">02. 「パトカー」+「タクシー」＝「パタトクカシーー」</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">03. 円周率</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">04. 元素記号</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">00. 文字列の逆順</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">01. 「パタトクカシーー」</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">02. 「パトカー」+「タクシー」＝「パタトクカシーー」</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">03. 円周率</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">04. 元素記号</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#n-gram">05. n-gram</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">06. 集合</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">07. テンプレートによる文生成</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">08. 暗号文</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">06. 集合</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">07. テンプレートによる文生成</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">08. 暗号文</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typoglycemia">09. Typoglycemia</a></li>
 </ul>
             </nav>
@@ -431,35 +432,114 @@
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1>第1章: 準備運動<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
 <section id="id2">
-<h2>01. 「パタトクカシーー」<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
-<p>「パタトクカシーー」という文字列の1, 3, 5, 7文字目を取り出して連結した文字列を得よ.</p>
+<h2>00. 文字列の逆順<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>文字列&quot;stressed&quot;の文字を逆に (末尾から先頭に向かって) 並べた文字列を得よ.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;stressed&quot;</span>
+<span class="n">rev_text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rev_text</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>desserts
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="id3">
-<h2>02. 「パトカー」+「タクシー」＝「パタトクカシーー」<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
-<p>「パトカー」+「タクシー」の文字を先頭から交互に連結して文字列「パタトクカシーー」を得よ.</p>
+<h2>01. 「パタトクカシーー」<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>「パタトクカシーー」という文字列の1, 3, 5, 7文字目を取り出して連結した文字列を得よ.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;パタトクカシーー&quot;</span>
+<span class="n">sel_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="mi">2</span><span class="p">)])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sel_text</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>パトカー
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="id4">
-<h2>03. 円周率<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
-<p>&quot;Now I need a drink, alcoholic of course, after the heavy lectures involving quantum mechanics.&quot;という文を単語に分解し, 各単語の (アルファベットの) 文字数を先頭から出現順に並べたリストを作成せよ.</p>
+<h2>02. 「パトカー」+「タクシー」＝「パタトクカシーー」<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>「パトカー」+「タクシー」の文字を先頭から交互に連結して文字列「パタトクカシーー」を得よ.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">text1</span> <span class="o">=</span> <span class="s2">&quot;パトカー&quot;</span>
+<span class="n">text2</span> <span class="o">=</span> <span class="s2">&quot;タクシー&quot;</span>
+<span class="n">con_text</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">con_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([(</span><span class="n">text1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">text2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">text1</span><span class="p">))])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">con_text</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>パタトクカシーー
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="id5">
-<h2>04. 元素記号<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<h2>03. 円周率<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>&quot;Now I need a drink, alcoholic of course, after the heavy lectures involving quantum mechanics.&quot;という文を単語に分解し, 各単語の (アルファベットの) 文字数を先頭から出現順に並べたリストを作成せよ.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Now I need a drink, alcoholic of course, after the heavy lectures involving quantum mechanics.&quot;</span>
+<span class="n">words</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+<span class="n">word_lengths</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">word_lengths</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5, 8, 9, 7, 9]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id6">
+<h2>04. 元素記号<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
 <p>&quot;Hi He Lied Because Boron Could Not Oxidize Fluorine. New Nations Might Also Sign Peace Security Clause. Arthur King Can.&quot;という文を単語に分解し, 1, 5, 6, 7, 8, 9, 15, 16, 19番目の単語は先頭の1文字, それ以外の単語は先頭の2文字を取り出し, 取り出した文字列から単語の位置 (先頭から何番目の単語か) への連想配列 (辞書型もしくはマップ型) を作成せよ.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Hi He Lied Because Boron Could Not Oxidize Fluorine. New Nations Might Also Sign Peace Security Clause. Arthur King Can.&quot;</span>
+<span class="n">words</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+<span class="n">tgt_pos</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">19</span><span class="p">}</span>
+<span class="n">elem_sym</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span> <span class="p">(</span><span class="n">word</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="ow">in</span> <span class="n">tgt_pos</span> <span class="k">else</span> <span class="n">word</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">words</span><span class="p">)}</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">elem_sym</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{1: &#39;H&#39;, 2: &#39;He&#39;, 3: &#39;Li&#39;, 4: &#39;Be&#39;, 5: &#39;B&#39;, 6: &#39;C&#39;, 7: &#39;N&#39;, 8: &#39;O&#39;, 9: &#39;F&#39;, 10: &#39;Ne&#39;, 11: &#39;Na&#39;, 12: &#39;Mi&#39;, 13: &#39;Al&#39;, 14: &#39;Si&#39;, 15: &#39;P&#39;, 16: &#39;S&#39;, 17: &#39;Cl&#39;, 18: &#39;Ar&#39;, 19: &#39;K&#39;, 20: &#39;Ca&#39;}
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="n-gram">
 <h2>05. n-gram<a class="headerlink" href="#n-gram" title="Link to this heading">#</a></h2>
 <p>与えられたシーケンス (文字列やリストなど) からn-gramを作る関数を作成せよ. この関数を用い, &quot;I am an NLPer&quot;という文から単語bi-gram, 文字bi-gramを得よ.</p>
 </section>
-<section id="id6">
-<h2>06. 集合<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<section id="id7">
+<h2>06. 集合<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
 <p>&quot;paraparaparadise&quot;と&quot;paragraph&quot;に含まれる文字bi-gramの集合を, それぞれ, XとYとして求め, XとYの和集合, 積集合, 差集合を求めよ. さらに, 'se'というbi-gramがXおよびYに含まれるかどうかを調べよ.</p>
 </section>
-<section id="id7">
-<h2>07. テンプレートによる文生成<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<section id="id8">
+<h2>07. テンプレートによる文生成<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
 <p>引数x, y, zを受け取り「x時のyはz」という文字列を返す関数を実装せよ. さらに, x=12, y=&quot;気温&quot;, z=22.4として, 実行結果を確認せよ.</p>
 </section>
-<section id="id8">
-<h2>08. 暗号文<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
+<section id="id9">
+<h2>08. 暗号文<a class="headerlink" href="#id9" title="Link to this heading">#</a></h2>
 <p>与えられた文字列の各文字を, 以下の仕様で変換する関数cipherを実装せよ.</p>
 <ul class="simple">
 <li><p>英小文字ならば(219 - 文字コード)の文字に置換</p></li>
@@ -529,14 +609,15 @@
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">01. 「パタトクカシーー」</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">02. 「パトカー」+「タクシー」＝「パタトクカシーー」</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">03. 円周率</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">04. 元素記号</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">00. 文字列の逆順</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">01. 「パタトクカシーー」</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">02. 「パトカー」+「タクシー」＝「パタトクカシーー」</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">03. 円周率</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">04. 元素記号</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#n-gram">05. n-gram</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">06. 集合</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">07. テンプレートによる文生成</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">08. 暗号文</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">06. 集合</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">07. テンプレートによる文生成</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">08. 暗号文</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typoglycemia">09. Typoglycemia</a></li>
 </ul>
   </nav></div>
