@@ -2,4 +2,6 @@
 # Learn more at https://jupyterbook.org/customize/toc.html
 
 format: jb-book
-root: intro
+root: docs/intro
+chapters:
+- file: docs/ch01/ch01.ipynb
