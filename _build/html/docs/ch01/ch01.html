@@ -529,6 +529,22 @@
 <section id="n-gram">
 <h2>05. n-gram<a class="headerlink" href="#n-gram" title="Link to this heading">#</a></h2>
 <p>与えられたシーケンス (文字列やリストなど) からn-gramを作る関数を作成せよ. この関数を用い, &quot;I am an NLPer&quot;という文から単語bi-gram, 文字bi-gramを得よ.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">n_gram</span><span class="p">(</span><span class="n">tgt</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">tgt</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tgt</span><span class="p">)</span> <span class="o">-</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;I am an NLPer&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">n_gram</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;I &#39;, &#39; a&#39;, &#39;am&#39;, &#39;m &#39;, &#39; a&#39;, &#39;an&#39;, &#39;n &#39;, &#39; N&#39;, &#39;NL&#39;, &#39;LP&#39;, &#39;Pe&#39;, &#39;er&#39;]
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="id7">
 <h2>06. 集合<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
