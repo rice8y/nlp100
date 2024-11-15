@@ -535,12 +535,15 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">tgt</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tgt</span><span class="p">)</span> <span class="o">-</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
 
 <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;I am an NLPer&quot;</span>
+<span class="n">words</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">n_gram</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">n_gram</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;I &#39;, &#39; a&#39;, &#39;am&#39;, &#39;m &#39;, &#39; a&#39;, &#39;an&#39;, &#39;n &#39;, &#39; N&#39;, &#39;NL&#39;, &#39;LP&#39;, &#39;Pe&#39;, &#39;er&#39;]
+[[&#39;I&#39;, &#39;am&#39;], [&#39;am&#39;, &#39;an&#39;], [&#39;an&#39;, &#39;NLPer&#39;]]
 </pre></div>
 </div>
 </div>
@@ -549,6 +552,41 @@
 <section id="id7">
 <h2>06. 集合<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
 <p>&quot;paraparaparadise&quot;と&quot;paragraph&quot;に含まれる文字bi-gramの集合を, それぞれ, XとYとして求め, XとYの和集合, 積集合, 差集合を求めよ. さらに, 'se'というbi-gramがXおよびYに含まれるかどうかを調べよ.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">textA</span> <span class="o">=</span> <span class="s2">&quot;paraparaparadise&quot;</span>
+<span class="n">textB</span> <span class="o">=</span> <span class="s2">&quot;paragraph&quot;</span>
+<span class="n">textA</span> <span class="o">=</span> <span class="n">n_gram</span><span class="p">(</span><span class="n">textA</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">textB</span> <span class="o">=</span> <span class="n">n_gram</span><span class="p">(</span><span class="n">textB</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">textA</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">textB</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Union: </span><span class="si">{</span><span class="n">X</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Y</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Intersection Set: </span><span class="si">{</span><span class="n">X</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">Y</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Difference Set: </span><span class="si">{</span><span class="n">X</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Y</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">tgt</span> <span class="o">=</span> <span class="s2">&quot;se&quot;</span>
+<span class="k">if</span> <span class="n">tgt</span> <span class="ow">in</span> <span class="n">X</span> <span class="ow">and</span> <span class="n">tgt</span> <span class="ow">in</span> <span class="n">Y</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tgt</span><span class="si">}</span><span class="s2"> exists in X and Y.&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">tgt</span> <span class="ow">in</span> <span class="n">X</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tgt</span><span class="si">}</span><span class="s2"> exists in X.&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">tgt</span> <span class="ow">in</span> <span class="n">Y</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tgt</span><span class="si">}</span><span class="s2"> exists in Y.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tgt</span><span class="si">}</span><span class="s2"> does not exists.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Union: {&#39;ap&#39;, &#39;di&#39;, &#39;ra&#39;, &#39;is&#39;, &#39;ad&#39;, &#39;pa&#39;, &#39;ag&#39;, &#39;ar&#39;, &#39;ph&#39;, &#39;se&#39;, &#39;gr&#39;}
+Intersection Set: {&#39;pa&#39;, &#39;ap&#39;, &#39;ar&#39;, &#39;ra&#39;}
+Difference Set: {&#39;ad&#39;, &#39;se&#39;, &#39;di&#39;, &#39;is&#39;}
+se exists in X.
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="id8">
 <h2>07. テンプレートによる文生成<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
