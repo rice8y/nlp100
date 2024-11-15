@@ -579,9 +579,9 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Union: {&#39;ap&#39;, &#39;di&#39;, &#39;ra&#39;, &#39;is&#39;, &#39;ad&#39;, &#39;pa&#39;, &#39;ag&#39;, &#39;ar&#39;, &#39;ph&#39;, &#39;se&#39;, &#39;gr&#39;}
-Intersection Set: {&#39;pa&#39;, &#39;ap&#39;, &#39;ar&#39;, &#39;ra&#39;}
-Difference Set: {&#39;ad&#39;, &#39;se&#39;, &#39;di&#39;, &#39;is&#39;}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Union: {&#39;ra&#39;, &#39;di&#39;, &#39;gr&#39;, &#39;ag&#39;, &#39;ap&#39;, &#39;ad&#39;, &#39;ph&#39;, &#39;pa&#39;, &#39;is&#39;, &#39;ar&#39;, &#39;se&#39;}
+Intersection Set: {&#39;pa&#39;, &#39;ra&#39;, &#39;ar&#39;, &#39;ap&#39;}
+Difference Set: {&#39;ad&#39;, &#39;is&#39;, &#39;di&#39;, &#39;se&#39;}
 se exists in X.
 </pre></div>
 </div>
@@ -591,6 +591,21 @@ se exists in X.
 <section id="id8">
 <h2>07. テンプレートによる文生成<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
 <p>引数x, y, zを受け取り「x時のyはz」という文字列を返す関数を実装せよ. さらに, x=12, y=&quot;気温&quot;, z=22.4として, 実行結果を確認せよ.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">print_temp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">時の</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">は</span><span class="si">{</span><span class="n">z</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+<span class="n">print_temp</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="s2">&quot;気温&quot;</span><span class="p">,</span> <span class="mf">22.4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>12時の気温は22.4
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="id9">
 <h2>08. 暗号文<a class="headerlink" href="#id9" title="Link to this heading">#</a></h2>
