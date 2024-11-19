@@ -63,6 +63,8 @@
     <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'docs/ch02/ch02';</script>
     <link rel="canonical" href="https://rice8y.github.io/nlp100/docs/ch02/ch02.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -448,6 +450,23 @@
 <section id="id1">
 <h2>10. 行数のカウント<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
 <p>行数をカウントせよ. 確認にはwcコマンドを用いよ.</p>
+<p><strong>Python:</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;popular-names.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="n">cnt</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2780
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>UNIX:</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>wc<span class="w"> </span>-l<span class="w"> </span>popular-names.txt
@@ -464,6 +483,34 @@
 <section id="id2">
 <h2>11. タブをスペースに置換<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
 <p>タブ1文字につきスペース1文字に置換せよ. 確認にはsedコマンド, trコマンド, もしくはexpandコマンドを用いよ.</p>
+<p><strong>Python:</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;popular-names.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mary F 7065 1880
+Anna F 2604 1880
+Emma F 2003 1880
+Elizabeth F 1939 1880
+Minnie F 1746 1880
+Margaret F 1578 1880
+Ida F 1472 1880
+Alice F 1414 1880
+Bertha F 1320 1880
+Sarah F 1288 1880
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>UNIX:</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">sed</span></code> ver.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>sed<span class="w"> </span><span class="s1">&#39;s/\t/ /g&#39;</span><span class="w"> </span>popular-names.txt<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
@@ -485,6 +532,8 @@ Sarah F 1288 1880
 </div>
 </div>
 </div>
+<p><strong>UNIX:</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">tr</span></code> ver.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>tr<span class="w"> </span><span class="s1">&#39;\t&#39;</span><span class="w"> </span><span class="s1">&#39; &#39;</span><span class="w"> </span>&lt;<span class="w"> </span>popular-names.txt<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
@@ -506,6 +555,7 @@ Sarah F 1288 1880
 </div>
 </div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">expand</span></code> ver.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>expand<span class="w"> </span>-t<span class="w"> </span><span class="m">1</span><span class="w"> </span>popular-names.txt<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
@@ -531,30 +581,57 @@ Sarah F 1288 1880
 <section id="col1-txt-2col2-txt">
 <h2>12. 1列目をcol1.txtに，2列目をcol2.txtに保存<a class="headerlink" href="#col1-txt-2col2-txt" title="Link to this heading">#</a></h2>
 <p>各行の1列目だけを抜き出したものをcol1.txtに, 2列目だけを抜き出したものをcol2.txtとしてファイルに保存せよ. 確認にはcutコマンドを用いよ.</p>
+<p><strong>Python:</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>cut<span class="w"> </span>-f<span class="w"> </span><span class="m">1</span><span class="w"> </span>popular-names.txt<span class="w"> </span>&gt;<span class="w"> </span>col1.txt<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>cut<span class="w"> </span>-f<span class="w"> </span><span class="m">2</span><span class="w"> </span>popular-names.txt<span class="w"> </span>&gt;<span class="w"> </span>col2.txt
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;popular-names.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;col1.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fc1</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;col2.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fc2</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">columns</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">fc1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">fc2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span> 
 </pre></div>
 </div>
 </div>
 </div>
+<p><strong>UNIX:</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>awk<span class="w"> </span><span class="s1">&#39;BEGIN {print &quot;[Check]\ncol1.txt col2.txt\n&quot;} {getline second &lt; &quot;col2.txt&quot;; print $0, second}&#39;</span><span class="w"> </span>col1.txt<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>cut<span class="w"> </span>-f<span class="w"> </span><span class="m">1</span><span class="w"> </span>popular-names.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;BEGIN {print &quot;[Check]: col1.txt\nPython UNIX\n&quot;} {getline second &lt; &quot;col1.txt&quot;; print $0, second}&#39;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Check]
-col1.txt col2.txt
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Check]: col1.txt
+Python UNIX
 
-Mary F
-Anna F
-Emma F
-Elizabeth F
-Minnie F
-Margaret F
-Ida F
+Mary Mary
+Anna Anna
+Emma Emma
+Elizabeth Elizabeth
+Minnie Minnie
+Margaret Margaret
+Ida Ida
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>cut<span class="w"> </span>-f<span class="w"> </span><span class="m">2</span><span class="w"> </span>popular-names.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;BEGIN {print &quot;[Check]: col2.txt\nPython UNIX\n&quot;} {getline second &lt; &quot;col2.txt&quot;; print $0, second}&#39;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Check]: col2.txt
+Python UNIX
+
+F F
+F F
+F F
+F F
+F F
+F F
+F F
 </pre></div>
 </div>
 </div>
@@ -563,30 +640,34 @@ Ida F
 <section id="col1-txtcol2-txt">
 <h2>13. col1.txtとcol2.txtをマージ<a class="headerlink" href="#col1-txtcol2-txt" title="Link to this heading">#</a></h2>
 <p>12で作ったcol1.txtとcol2.txtを結合し, 元のファイルの1列目と2列目をタブ区切りで並べたテキストファイルを作成せよ, 確認にはpasteコマンドを用いよ.</p>
+<p><strong>Python:</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>paste<span class="w"> </span>col1.txt<span class="w"> </span>col2.txt<span class="w"> </span>&gt;<span class="w"> </span>col1-2.txt
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;col1.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fc1</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;col2.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fc2</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;col1-2.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fc12</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">line1</span><span class="p">,</span> <span class="n">line2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">fc1</span><span class="p">,</span> <span class="n">fc2</span><span class="p">):</span>
+        <span class="n">fc12</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line1</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">line2</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
+<p><strong>UNIX:</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>awk<span class="w"> </span><span class="s1">&#39;BEGIN {print &quot;[Check]\ncol1-2.txt\n&quot;} {print $0}&#39;</span><span class="w"> </span>col1-2.txt<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>paste<span class="w"> </span>col1.txt<span class="w"> </span>col2.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;BEGIN {print &quot;[Check]: col1-2.txt\nPython UNIX\n&quot;} {getline second &lt; &quot;col1-2.txt&quot;; print $0, second}&#39;</span><span class="w"> </span>col1-2.txt<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Check]
-col1-2.txt
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Check]: col1-2.txt
+Python UNIX
 
-Mary	F
-Anna	F
-Emma	F
-Elizabeth	F
-Minnie	F
-Margaret	F
-Ida	F
+Mary	F Mary	F
+Anna	F Anna	F
+Emma	F Emma	F
+Elizabeth	F Elizabeth	F
+Minnie	F Minnie	F
+Margaret	F Margaret	F
+Ida	F Ida	F
 </pre></div>
 </div>
 </div>
@@ -595,24 +676,32 @@ Ida	F
 <section id="n">
 <h2>14. 先頭からN行を出力<a class="headerlink" href="#n" title="Link to this heading">#</a></h2>
 <p>自然数Nをコマンドライン引数などの手段で受け取り, 入力のうち先頭のN行だけを表示せよ. 確認にはheadコマンドを用いよ.</p>
-<p><code class="docutils literal notranslate"><span class="pre">nhlines.sh</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
-
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$#</span><span class="s2">&quot;</span><span class="w"> </span>-ne<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Usage: </span><span class="nv">$0</span><span class="s2"> &lt;number_of_lines&gt; &lt;file&gt;&quot;</span>
-<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
-<span class="k">fi</span>
-
-<span class="nv">N</span><span class="o">=</span><span class="nv">$1</span>
-<span class="nv">file</span><span class="o">=</span><span class="nv">$2</span>
-
-head<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$N</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
-</pre></div>
-</div>
+<p><strong>Python:</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>chmod<span class="w"> </span>+x<span class="w"> </span>nhlines.sh
-<span class="o">!</span>./nhlines.sh<span class="w"> </span><span class="m">4</span><span class="w"> </span>popular-names.txt
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">nhlines</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[:</span><span class="n">N</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+<span class="n">nhlines</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;popular-names.txt&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mary	F	7065	1880
+Anna	F	2604	1880
+Emma	F	2003	1880
+Elizabeth	F	1939	1880
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>UNIX:</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>popular-names.txt
 </pre></div>
 </div>
 </div>
@@ -629,24 +718,32 @@ Elizabeth	F	1939	1880
 <section id="id3">
 <h2>15. 末尾のN行を出力<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
 <p>自然数Nをコマンドライン引数などの手段で受け取り, 入力のうち末尾のN行だけを表示せよ. 確認にはtailコマンドを用いよ.</p>
-<p><code class="docutils literal notranslate"><span class="pre">ntlines.sh</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
-
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$#</span><span class="s2">&quot;</span><span class="w"> </span>-ne<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Usage: </span><span class="nv">$0</span><span class="s2"> &lt;number_of_lines&gt; &lt;file&gt;&quot;</span>
-<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
-<span class="k">fi</span>
-
-<span class="nv">N</span><span class="o">=</span><span class="nv">$1</span>
-<span class="nv">file</span><span class="o">=</span><span class="nv">$2</span>
-
-tail<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$N</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$file</span><span class="s2">&quot;</span>
-</pre></div>
-</div>
+<p><strong>Python:</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>chmod<span class="w"> </span>+x<span class="w"> </span>ntlines.sh
-<span class="o">!</span>./ntlines.sh<span class="w"> </span><span class="m">4</span><span class="w"> </span>popular-names.txt
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ntlines</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="n">N</span><span class="p">:]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+<span class="n">ntlines</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;popular-names.txt&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Elijah	M	12886	2018
+Lucas	M	12585	2018
+Mason	M	12435	2018
+Logan	M	12352	2018
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>UNIX:</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>tail<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>popular-names.txt
 </pre></div>
 </div>
 </div>
@@ -663,44 +760,131 @@ Logan	M	12352	2018
 <section id="id4">
 <h2>16. ファイルをN分割する<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
 <p>自然数Nをコマンドライン引数などの手段で受け取り, 入力のファイルを行単位でN分割せよ. 同様の処理をsplitコマンドで実現せよ.</p>
+<p><strong>Python:</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">nsplit</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">input_file</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    
+    <span class="n">total_lines</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+    <span class="n">split_size</span> <span class="o">=</span> <span class="n">total_lines</span> <span class="o">//</span> <span class="n">N</span>
+    <span class="n">rem</span> <span class="o">=</span> <span class="n">total_lines</span> <span class="o">%</span> <span class="n">N</span>
+    
+    <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">base</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">input_file</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">split_size</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">rem</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">02</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out_file</span><span class="p">:</span>
+            <span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]))</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">end</span>
+
+<span class="n">nsplit</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;popular-names.txt&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>UNIX:</strong></p>
 <p><code class="docutils literal notranslate"><span class="pre">nsplit.sh</span></code>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
 
-<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$#</span><span class="s2">&quot;</span><span class="w"> </span>-ne<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Usage: </span><span class="nv">$0</span><span class="s2"> &lt;number_of_lines&gt; &lt;input_file&gt; &lt;output_file_prefix&gt;&quot;</span>
-<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
-<span class="k">fi</span>
-
 <span class="nv">N</span><span class="o">=</span><span class="nv">$1</span>
 <span class="nv">input_file</span><span class="o">=</span><span class="nv">$2</span>
-<span class="nv">output_file_prefix</span><span class="o">=</span><span class="nv">$3</span>
+<span class="nv">output_file_prefix</span><span class="o">=</span><span class="k">$(</span>basename<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$input_file</span><span class="s2">&quot;</span><span class="w"> </span>.txt<span class="k">)</span><span class="s2">&quot;-split-&quot;</span>
 
-split<span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$N</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$input_file</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output_file_prefix</span><span class="s2">&quot;</span>
+<span class="nv">total_lines</span><span class="o">=</span><span class="k">$(</span>wc<span class="w"> </span>-l<span class="w"> </span>&lt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$input_file</span><span class="s2">&quot;</span><span class="k">)</span>
+
+<span class="nv">split_size</span><span class="o">=</span><span class="k">$((</span><span class="nv">total_lines</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nv">N</span><span class="k">))</span>
+<span class="nv">rem</span><span class="o">=</span><span class="k">$((</span><span class="nv">total_lines</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="nv">N</span><span class="k">))</span>
+
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$rem</span><span class="s2">&quot;</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span>split<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$N</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span>--additional-suffix<span class="o">=</span>.txt<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$input_file</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output_file_prefix</span><span class="s2">&quot;</span>
+<span class="k">else</span>
+<span class="w">    </span>split<span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;</span><span class="k">$((</span><span class="nv">split_size</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="k">))</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span>--additional-suffix<span class="o">=</span>.txt<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$input_file</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output_file_prefix</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
 </pre></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>chmod<span class="w"> </span>+x<span class="w"> </span>nsplit.sh
-<span class="o">!</span>./nsplit.sh<span class="w"> </span><span class="m">500</span><span class="w"> </span>popular-names.txt<span class="w"> </span>popular-names-500ld-
+<span class="o">!</span>./nsplit.sh<span class="w"> </span><span class="m">3</span><span class="w"> </span>popular-names.txt
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;[Check]\nls popular-names-500ld-*\n&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ls<span class="w"> </span>popular-names-500ld-*
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>awk<span class="w"> </span><span class="s1">&#39;BEGIN {print &quot;[Check]:\npopular-names-00.txt popular-names-split-00.txt\n&quot;} {getline second &lt; &quot;popular-names-split-00.txt&quot;; print $0, second}&#39;</span><span class="w"> </span>popular-names-00.txt<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Check]
-ls popular-names-500ld-*
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Check]:
+popular-names-00.txt popular-names-split-00.txt
 
-popular-names-500ld-00	popular-names-500ld-02	popular-names-500ld-04
-popular-names-500ld-01	popular-names-500ld-03	popular-names-500ld-05
+Mary	F	7065	1880 Mary	F	7065	1880
+Anna	F	2604	1880 Anna	F	2604	1880
+Emma	F	2003	1880 Emma	F	2003	1880
+Elizabeth	F	1939	1880 Elizabeth	F	1939	1880
+Minnie	F	1746	1880 Minnie	F	1746	1880
+Margaret	F	1578	1880 Margaret	F	1578	1880
+Ida	F	1472	1880 Ida	F	1472	1880
 </pre></div>
 </div>
 </div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>awk<span class="w"> </span><span class="s1">&#39;BEGIN {print &quot;[Check]:\npopular-names-01.txt popular-names-split-01.txt\n&quot;} {getline second &lt; &quot;popular-names-split-01.txt&quot;; print $0, second}&#39;</span><span class="w"> </span>popular-names-01.txt<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Check]:
+popular-names-01.txt popular-names-split-01.txt
+
+Virginia	F	16162	1926 Virginia	F	16162	1926
+Mildred	F	13551	1926 Mildred	F	13551	1926
+Frances	F	13355	1926 Frances	F	13355	1926
+Robert	M	61130	1926 Robert	M	61130	1926
+John	M	56110	1926 John	M	56110	1926
+James	M	53209	1926 James	M	53209	1926
+William	M	51920	1926 William	M	51920	1926
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>awk<span class="w"> </span><span class="s1">&#39;BEGIN {print &quot;[Check]:\npopular-names-02.txt popular-names-split-02.txt\n&quot;} {getline second &lt; &quot;popular-names-split-02.txt&quot;; print $0, second}&#39;</span><span class="w"> </span>popular-names-02.txt<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Check]:
+popular-names-02.txt popular-names-split-02.txt
+
+John	M	43181	1972 John	M	43181	1972
+Robert	M	43037	1972 Robert	M	43037	1972
+Jason	M	37446	1972 Jason	M	37446	1972
+Brian	M	36322	1972 Brian	M	36322	1972
+William	M	30529	1972 William	M	30529	1972
+Matthew	M	22943	1972 Matthew	M	22943	1972
+Jennifer	F	62447	1973 Jennifer	F	62447	1973
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">split</span></code> で ファイルを <span class="math notranslate nohighlight">\(N\)</span> 分割する際, <code class="docutils literal notranslate"><span class="pre">-n</span></code> で分割数 <span class="math notranslate nohighlight">\(N\)</span> を与えるが, <span class="math notranslate nohighlight">\(\text{行数} / N\)</span> が割り切れない場合, 上手く分割されないことがある. これは, <code class="docutils literal notranslate"><span class="pre">-n</span> <span class="pre">N</span></code> の場合, バイト単位で分割されるためであると考えられる. 行単位で分割したい場合は, <code class="docutils literal notranslate"><span class="pre">-n</span> <span class="pre">r/N</span></code>, <code class="docutils literal notranslate"><span class="pre">-n</span> <span class="pre">l/N</span></code> のようにする必要がある. <code class="docutils literal notranslate"><span class="pre">r/N</span></code> はラウンドロビン方式により <span class="math notranslate nohighlight">\(N\)</span> 分割, <code class="docutils literal notranslate"><span class="pre">l/N</span></code> は行単位でバイト数に基づき <span class="math notranslate nohighlight">\(N\)</span> 分割する. デフォルト (<code class="docutils literal notranslate"><span class="pre">-n</span> <span class="pre">N</span></code> のみ) ではバイト単位で分割される.</p>
+<p><strong>References:</strong></p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.man7.org/linux/man-pages/man1/split.1.html">https://www.man7.org/linux/man-pages/man1/split.1.html</a></p></li>
+<li><p><a class="github reference external" href="https://github.com/coreutils/coreutils/blob/master/src/split.c">coreutils/coreutils</a></p></li>
+</ul>
 </div>
 </section>
 <section id="id5">
