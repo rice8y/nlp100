@@ -5,3 +5,4 @@ format: jb-book
 root: docs/intro
 chapters:
 - file: docs/ch01/ch01.ipynb
+- file: docs/ch02/ch02.ipynb
