@@ -434,7 +434,7 @@
 <h1>第2章: UNIXコマンド<a class="headerlink" href="#unix" title="Link to this heading">#</a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>表示の都合上, 一部出力行数を制限しています.</p>
+<p>表示の都合上, 出力行数を制限しています.</p>
 </div>
 <section id="id1">
 <h2>10. 行数のカウント<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
@@ -602,23 +602,16 @@ head<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</s
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="k">bash</span>
-chmod +x nhlines.sh
-./nhlines.sh 4 popular-names.txt
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>chmod<span class="w"> </span>+x<span class="w"> </span>nhlines.sh
+<span class="o">!</span>./nhlines.sh<span class="w"> </span><span class="m">4</span><span class="w"> </span>popular-names.txt
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mary	F	7065	1880
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Anna	F	2604	1880
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Emma	F	2003	1880
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Elizabeth	F	1939	1880
+Anna	F	2604	1880
+Emma	F	2003	1880
+Elizabeth	F	1939	1880
 </pre></div>
 </div>
 </div>
@@ -714,7 +707,7 @@ popular-names-500ld-01	popular-names-500ld-03	popular-names-500ld-05
 <p>1列目の文字列の種類 (異なる文字列の集合) を求めよ. 確認にはcut, sort, uniqコマンドを用いよ.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>cut<span class="w"> </span>-f<span class="w"> </span><span class="m">1</span><span class="w"> </span>popular-names.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>cut<span class="w"> </span>-f<span class="w"> </span><span class="m">1</span><span class="w"> </span>popular-names.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
 </pre></div>
 </div>
 </div>
@@ -729,132 +722,6 @@ Amelia
 Amy
 Andrew
 Angela
-Anna
-Annie
-Anthony
-Ashley
-Austin
-Ava
-Barbara
-Benjamin
-Bertha
-Bessie
-Betty
-Brandon
-Brian
-Brittany
-Carol
-Carolyn
-Charles
-Charlotte
-Chloe
-Christopher
-Clara
-Crystal
-Cynthia
-Daniel
-David
-Deborah
-Debra
-Donald
-Donna
-Doris
-Dorothy
-Edward
-Elijah
-Elizabeth
-Emily
-Emma
-Ethan
-Ethel
-Evelyn
-Florence
-Frances
-Frank
-Gary
-George
-Hannah
-Harper
-Harry
-Heather
-Helen
-Henry
-Ida
-Isabella
-Jacob
-James
-Jason
-Jayden
-Jeffrey
-Jennifer
-Jessica
-Joan
-John
-Joseph
-Joshua
-Judith
-Julie
-Justin
-Karen
-Kathleen
-Kelly
-Kimberly
-Larry
-Laura
-Lauren
-Liam
-Lillian
-Linda
-Lisa
-Logan
-Lori
-Lucas
-Madison
-Margaret
-Marie
-Mark
-Mary
-Mason
-Matthew
-Megan
-Melissa
-Mia
-Michael
-Michelle
-Mildred
-Minnie
-Nancy
-Nicholas
-Nicole
-Noah
-Oliver
-Olivia
-Pamela
-Patricia
-Rachel
-Rebecca
-Richard
-Robert
-Ronald
-Ruth
-Samantha
-Sandra
-Sarah
-Scott
-Sharon
-Shirley
-Sophia
-Stephanie
-Steven
-Susan
-Tammy
-Taylor
-Thomas
-Tracy
-Tyler
-Virginia
-Walter
-William
 </pre></div>
 </div>
 </div>
