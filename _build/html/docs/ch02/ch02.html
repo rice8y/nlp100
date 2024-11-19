@@ -636,6 +636,14 @@ F F
 </div>
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>cut<span class="w"> </span>-f<span class="w"> </span><span class="m">1</span><span class="w"> </span>popular-names.txt<span class="w"> </span>&gt;<span class="w"> </span>tmp.txt<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>diff<span class="w"> </span>col1.txt<span class="w"> </span>tmp.txt<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>tmp.txt
+<span class="o">!</span>cut<span class="w"> </span>-f<span class="w"> </span><span class="m">2</span><span class="w"> </span>popular-names.txt<span class="w"> </span>&gt;<span class="w"> </span>tmp.txt<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>diff<span class="w"> </span>col2.txt<span class="w"> </span>tmp.txt<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>tmp.txt
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="col1-txtcol2-txt">
 <h2>13. col1.txtとcol2.txtをマージ<a class="headerlink" href="#col1-txtcol2-txt" title="Link to this heading">#</a></h2>
@@ -653,7 +661,7 @@ F F
 <p><strong>UNIX:</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>paste<span class="w"> </span>col1.txt<span class="w"> </span>col2.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;BEGIN {print &quot;[Check]: col1-2.txt\nPython UNIX\n&quot;} {getline second &lt; &quot;col1-2.txt&quot;; print $0, second}&#39;</span><span class="w"> </span>col1-2.txt<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>paste<span class="w"> </span>col1.txt<span class="w"> </span>col2.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;BEGIN {print &quot;[Check]: col1-2.txt\nPython UNIX\n&quot;} {getline second &lt; &quot;col1-2.txt&quot;; print $0, second}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
 </pre></div>
 </div>
 </div>
@@ -668,6 +676,13 @@ Elizabeth	F Elizabeth	F
 Minnie	F Minnie	F
 Margaret	F Margaret	F
 Ida	F Ida	F
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>paste<span class="w"> </span>col1.txt<span class="w"> </span>col2.txt<span class="w"> </span>&gt;<span class="w"> </span>tmp.txt<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>diff<span class="w"> </span>col1-2.txt<span class="w"> </span>tmp.txt<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>tmp.txt
 </pre></div>
 </div>
 </div>
@@ -877,9 +892,18 @@ Jennifer	F	62447	1973 Jennifer	F	62447	1973
 </div>
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>diff<span class="w"> </span>popular-names-00.txt<span class="w"> </span>popular-names-split-00.txt
+<span class="o">!</span>diff<span class="w"> </span>popular-names-01.txt<span class="w"> </span>popular-names-split-01.txt
+<span class="o">!</span>diff<span class="w"> </span>popular-names-02.txt<span class="w"> </span>popular-names-split-02.txt
+</pre></div>
+</div>
+</div>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><code class="docutils literal notranslate"><span class="pre">split</span></code> で ファイルを <span class="math notranslate nohighlight">\(N\)</span> 分割する際, <code class="docutils literal notranslate"><span class="pre">-n</span></code> で分割数 <span class="math notranslate nohighlight">\(N\)</span> を与えるが, <span class="math notranslate nohighlight">\(\text{行数} / N\)</span> が割り切れない場合, 上手く分割されないことがある. これは, <code class="docutils literal notranslate"><span class="pre">-n</span> <span class="pre">N</span></code> の場合, バイト単位で分割されるためであると考えられる. 行単位で分割したい場合は, <code class="docutils literal notranslate"><span class="pre">-n</span> <span class="pre">r/N</span></code>, <code class="docutils literal notranslate"><span class="pre">-n</span> <span class="pre">l/N</span></code> のようにする必要がある. <code class="docutils literal notranslate"><span class="pre">r/N</span></code> はラウンドロビン方式により <span class="math notranslate nohighlight">\(N\)</span> 分割, <code class="docutils literal notranslate"><span class="pre">l/N</span></code> は行単位でバイト数に基づき <span class="math notranslate nohighlight">\(N\)</span> 分割する. デフォルト (<code class="docutils literal notranslate"><span class="pre">-n</span> <span class="pre">N</span></code> のみ) ではバイト単位で分割される.</p>
+<p><code class="docutils literal notranslate"><span class="pre">split</span></code> で ファイルを <span class="math notranslate nohighlight">\(N\)</span> 分割する際, <code class="docutils literal notranslate"><span class="pre">-n</span></code> で分割数 <span class="math notranslate nohighlight">\(N\)</span> を与えるが, 上手く分割されないことがある. これは, <code class="docutils literal notranslate"><span class="pre">-n</span> <span class="pre">N</span></code> の場合, バイト単位で分割されるためであると考えられる. 行単位で分割したい場合は, <code class="docutils literal notranslate"><span class="pre">-n</span> <span class="pre">r/N</span></code>, <code class="docutils literal notranslate"><span class="pre">-n</span> <span class="pre">l/N</span></code> のようにする必要がある. <code class="docutils literal notranslate"><span class="pre">r/N</span></code> はラウンドロビン方式により <span class="math notranslate nohighlight">\(N\)</span> 分割, <code class="docutils literal notranslate"><span class="pre">l/N</span></code> は行単位でバイト数に基づき <span class="math notranslate nohighlight">\(N\)</span> 分割する. デフォルト (<code class="docutils literal notranslate"><span class="pre">-n</span> <span class="pre">N</span></code> のみ) ではバイト単位で分割される.</p>
 <p><strong>References:</strong></p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://www.man7.org/linux/man-pages/man1/split.1.html">https://www.man7.org/linux/man-pages/man1/split.1.html</a></p></li>
@@ -890,6 +914,34 @@ Jennifer	F	62447	1973 Jennifer	F	62447	1973
 <section id="id5">
 <h2>17. １列目の文字列の異なり<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
 <p>1列目の文字列の種類 (異なる文字列の集合) を求めよ. 確認にはcut, sort, uniqコマンドを用いよ.</p>
+<p><strong>Python:</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">unique_vals</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;popular-names.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">unique_vals</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">unique_vals</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Abigail
+Aiden
+Alexander
+Alexis
+Alice
+Amanda
+Amelia
+Amy
+Andrew
+Angela
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>UNIX:</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>cut<span class="w"> </span>-f<span class="w"> </span><span class="m">1</span><span class="w"> </span>popular-names.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
@@ -915,6 +967,32 @@ Angela
 <section id="id6">
 <h2>18. 各行を3コラム目の数値の降順にソート<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
 <p>各行を3コラム目の数値の逆順で整列せよ (注意: 各行の内容は変更せずに並び替えよ).確認にはsortコマンドを用いよ (この問題はコマンドで実行した時の結果と合わなくてもよい).</p>
+<p><strong>Python:</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;popular-names.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">2</span><span class="p">]),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Linda	F	99689	1947
+Linda	F	96211	1948
+James	M	94757	1947
+Michael	M	92704	1957
+Robert	M	91640	1947
+Linda	F	91016	1949
+Michael	M	90656	1956
+Michael	M	90517	1958
+James	M	88584	1948
+Michael	M	88528	1954
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>UNIX:</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>sort<span class="w"> </span>-k<span class="w"> </span><span class="m">3</span>,3<span class="w"> </span>-nr<span class="w"> </span>popular-names.txt<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
@@ -940,6 +1018,39 @@ Michael	M	88528	1954
 <section id="id7">
 <h2>19. 各行の1コラム目の文字列の出現頻度を求め，出現頻度の高い順に並べる<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
 <p>各行の1列目の文字列の出現頻度を求め, その高い順に並べて表示せよ. 確認にはcut, uniq, sortコマンドを用いよ.</p>
+<p><strong>Python:</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">islice</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;popular-names.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    
+<span class="n">col1_vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
+<span class="n">freq</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">col1_vals</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">islice</span><span class="p">(</span><span class="n">freq</span><span class="o">.</span><span class="n">most_common</span><span class="p">(),</span> <span class="mi">10</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">count</span><span class="si">:</span><span class="s2">&gt;5</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  118 James
+  111 William
+  108 John
+  108 Robert
+   92 Mary
+   75 Charles
+   74 Michael
+   73 Elizabeth
+   70 Joseph
+   60 Margaret
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>UNIX:</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>cut<span class="w"> </span>-f<span class="w"> </span><span class="m">1</span><span class="w"> </span>popular-names.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-r<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
