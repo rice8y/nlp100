@@ -11642,12 +11642,13 @@ Logan M
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>awk<span class="w"> </span><span class="s1">&#39;BEGIN {print &quot;[Check]\n&quot;} {print $0}&#39;</span><span class="w"> </span>col1-2.txt
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>awk<span class="w"> </span><span class="s1">&#39;BEGIN {print &quot;[Check]\ncol1-2.txt\n&quot;} {print $0}&#39;</span><span class="w"> </span>col1-2.txt
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Check]
+col1-2.txt
 
 Mary	F
 Anna	F
@@ -14545,12 +14546,13 @@ chmod +x nsplit.sh
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;[Check]\n&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ls<span class="w"> </span>popular-names-500ld-*
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;[Check]\nls popular-names-500ld-*\n&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ls<span class="w"> </span>popular-names-500ld-*
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Check]
+ls popular-names-500ld-*
 
 popular-names-500ld-00	popular-names-500ld-02	popular-names-500ld-04
 popular-names-500ld-01	popular-names-500ld-03	popular-names-500ld-05
