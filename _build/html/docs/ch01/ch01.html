@@ -579,9 +579,9 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Union: {&#39;ra&#39;, &#39;di&#39;, &#39;gr&#39;, &#39;ag&#39;, &#39;ap&#39;, &#39;ad&#39;, &#39;ph&#39;, &#39;pa&#39;, &#39;is&#39;, &#39;ar&#39;, &#39;se&#39;}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Union: {&#39;pa&#39;, &#39;di&#39;, &#39;gr&#39;, &#39;ph&#39;, &#39;ra&#39;, &#39;ag&#39;, &#39;is&#39;, &#39;ap&#39;, &#39;ad&#39;, &#39;ar&#39;, &#39;se&#39;}
 Intersection Set: {&#39;pa&#39;, &#39;ra&#39;, &#39;ar&#39;, &#39;ap&#39;}
-Difference Set: {&#39;ad&#39;, &#39;is&#39;, &#39;di&#39;, &#39;se&#39;}
+Difference Set: {&#39;se&#39;, &#39;is&#39;, &#39;ad&#39;, &#39;di&#39;}
 se exists in X.
 </pre></div>
 </div>
@@ -615,10 +615,63 @@ se exists in X.
 <li><p>その他の文字はそのまま出力</p></li>
 </ul>
 <p>この関数を用い, 英語のメッセージを暗号化・復号化せよ.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">cipher</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;a&#39;</span> <span class="o">&lt;=</span> <span class="n">char</span> <span class="o">&lt;=</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span>
+            <span class="n">new_char</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="mi">219</span> <span class="o">-</span> <span class="nb">ord</span><span class="p">(</span><span class="n">char</span><span class="p">))</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_char</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">char</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Hello, World!&quot;</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">cipher</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Hvool, Wliow!
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="typoglycemia">
 <h2>09. Typoglycemia<a class="headerlink" href="#typoglycemia" title="Link to this heading">#</a></h2>
 <p>スペースで区切られた単語列に対して, 各単語の先頭と末尾の文字は残し, それ以外の文字の順序をランダムに並び替えるプログラムを作成せよ. ただし, 長さが4以下の単語は並び替えないこととする. 適当な英語の文 (例えば&quot;I couldn't believe that I could actually understand what I was reading : the phenomenal power of the human mind .&quot;) を与え, その実行結果を確認せよ.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
+
+<span class="k">def</span> <span class="nf">typoglycemia</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">word</span> <span class="o">=</span> <span class="n">words</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">middle</span> <span class="o">=</span> <span class="n">word</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">shuffled_middle</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">middle</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">middle</span><span class="p">)))</span>
+            <span class="n">words</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">word</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">shuffled_middle</span> <span class="o">+</span> <span class="n">word</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;I couldn&#39;t believe that I could actually understand what I was reading : the phenomenal power of the human mind .&quot;</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">typoglycemia</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>I c&#39;odulnt bveliee that I could atulcaly udenrasntd what I was randieg : the pmnehoenal pewor of the haumn mind .
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 
