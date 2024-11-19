@@ -16,7 +16,7 @@ latex:
 
 repository:
   url: https://github.com/rice8y/nlp100
-  path_to_book: docs  
+  # path_to_book: docs  
   branch: main
 
 html:
