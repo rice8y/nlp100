@@ -6,3 +6,11 @@ root: docs/intro
 chapters:
 - file: docs/ch01/ch01.ipynb
 - file: docs/ch02/ch02.ipynb
+- file: docs/ch03/ch03.ipynb
+- file: docs/ch04/ch04.ipynb
+- file: docs/ch05/ch05.ipynb
+- file: docs/ch06/ch06.ipynb
+- file: docs/ch07/ch07.ipynb
+- file: docs/ch08/ch08.ipynb
+- file: docs/ch09/ch09.ipynb
+- file: docs/ch10/ch10.ipynb
