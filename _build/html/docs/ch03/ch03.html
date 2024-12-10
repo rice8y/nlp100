@@ -427,6 +427,7 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">26. 強調マークアップの除去</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">27. 内部リンクの除去</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mediawiki">28. MediaWikiマークアップの除去</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#url">29. 国旗画像のURLを取得する</a></li>
 </ul>
             </nav>
         </div>
@@ -1167,19 +1168,13 @@ London Tower (1).JPG|[[ロンドン塔]]
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
 
 <span class="n">uk</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span>
-<span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;\[\[Category:.*?\]\]&quot;</span>
+<span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;\[\[Category:.*?\]\]&quot;</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">uk</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;[[Category:イギリス|*]]&#39;, &#39;[[Category:イギリス連邦加盟国]]&#39;, &#39;[[Category:英連邦王国|*]]&#39;, &#39;[[Category:G8加盟国]]&#39;, &#39;[[Category:欧州連合加盟国|元]]&#39;, &#39;[[Category:海洋国家]]&#39;, &#39;[[Category:現存する君主国]]&#39;, &#39;[[Category:島国]]&#39;, &#39;[[Category:1801年に成立した国家・領域]]&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;&gt;:4: SyntaxWarning: invalid escape sequence &#39;\[&#39;
-&lt;&gt;:4: SyntaxWarning: invalid escape sequence &#39;\[&#39;
-/tmp/ipykernel_113454/2722538883.py:4: SyntaxWarning: invalid escape sequence &#39;\[&#39;
-  pattern = &quot;\[\[Category:.*?\]\]&quot;
 </pre></div>
 </div>
 </div>
@@ -1193,19 +1188,13 @@ London Tower (1).JPG|[[ロンドン塔]]
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
 
 <span class="n">uk</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span>
-<span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;\[\[Category:(.*?)(?:\|.*?|)\]\]&quot;</span>
+<span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;\[\[Category:(.*?)(?:\|.*?|)\]\]&quot;</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">uk</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;イギリス&#39;, &#39;イギリス連邦加盟国&#39;, &#39;英連邦王国&#39;, &#39;G8加盟国&#39;, &#39;欧州連合加盟国&#39;, &#39;海洋国家&#39;, &#39;現存する君主国&#39;, &#39;島国&#39;, &#39;1801年に成立した国家・領域&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;&gt;:4: SyntaxWarning: invalid escape sequence &#39;\[&#39;
-&lt;&gt;:4: SyntaxWarning: invalid escape sequence &#39;\[&#39;
-/tmp/ipykernel_113454/4209450914.py:4: SyntaxWarning: invalid escape sequence &#39;\[&#39;
-  pattern = &quot;\[\[Category:(.*?)(?:\|.*?|)\]\]&quot;
 </pre></div>
 </div>
 </div>
@@ -1676,6 +1665,39 @@ ccTLD: .uk / .gb
 </div>
 </div>
 </section>
+<section id="url">
+<h2>29. 国旗画像のURLを取得する<a class="headerlink" href="#url" title="Link to this heading">#</a></h2>
+<p>テンプレートの内容を利用し, 国旗画像のURLを取得せよ. (ヒント: <a class="reference external" href="http://www.mediawiki.org/wiki/API:Main_page/ja">MediaWiki API</a>の<a class="reference external" href="https://www.mediawiki.org/wiki/API:Imageinfo">imageinfo</a>を呼び出して, ファイル参照をURLに変換すればよい)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">urllib</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://www.mediawiki.org/w/api.php?action=query&amp;titles=File:&#39;</span> <span class="o">+</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">info_dict</span><span class="p">[</span><span class="s1">&#39;国旗画像&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;&amp;format=json&amp;prop=imageinfo&amp;iiprop=url&#39;</span>
+<span class="n">connection</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">connection</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+<span class="n">iurl</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">][</span><span class="s1">&#39;pages&#39;</span><span class="p">][</span><span class="s1">&#39;-1&#39;</span><span class="p">][</span><span class="s1">&#39;imageinfo&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;url&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">iurl</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>https://upload.wikimedia.org/wikipedia/commons/8/83/Flag_of_the_United_Kingdom_%283-5%29.svg
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">SVG</span>
+<span class="n">SVG</span><span class="p">(</span><span class="n">iurl</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/b93bb15033d6c2219f290121d40c0a741765bd4b077ebcf5a5b0d917ff725a28.svg" src="../../_images/b93bb15033d6c2219f290121d40c0a741765bd4b077ebcf5a5b0d917ff725a28.svg" />
+</div>
+</div>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -1752,6 +1774,7 @@ ccTLD: .uk / .gb
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">26. 強調マークアップの除去</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">27. 内部リンクの除去</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mediawiki">28. MediaWikiマークアップの除去</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#url">29. 国旗画像のURLを取得する</a></li>
 </ul>
   </nav></div>
 
