@@ -451,7 +451,7 @@
 <section id="json">
 <h2>20. JSONデータの読み込み<a class="headerlink" href="#json" title="Link to this heading">#</a></h2>
 <p>Wikipedia記事のJSONファイルを読み込み, 「イギリス」に関する記事本文を表示せよ. 問題21-29では, ここで抽出した記事本文に対して実行せよ.</p>
-<div class="cell docutils container">
+<div class="cell tag_scroll-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
 
@@ -1178,7 +1178,7 @@ London Tower (1).JPG|[[ロンドン塔]]
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;&gt;:4: SyntaxWarning: invalid escape sequence &#39;\[&#39;
 &lt;&gt;:4: SyntaxWarning: invalid escape sequence &#39;\[&#39;
-/tmp/ipykernel_112462/2722538883.py:4: SyntaxWarning: invalid escape sequence &#39;\[&#39;
+/tmp/ipykernel_113454/2722538883.py:4: SyntaxWarning: invalid escape sequence &#39;\[&#39;
   pattern = &quot;\[\[Category:.*?\]\]&quot;
 </pre></div>
 </div>
@@ -1204,7 +1204,7 @@ London Tower (1).JPG|[[ロンドン塔]]
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;&gt;:4: SyntaxWarning: invalid escape sequence &#39;\[&#39;
 &lt;&gt;:4: SyntaxWarning: invalid escape sequence &#39;\[&#39;
-/tmp/ipykernel_112462/4209450914.py:4: SyntaxWarning: invalid escape sequence &#39;\[&#39;
+/tmp/ipykernel_113454/4209450914.py:4: SyntaxWarning: invalid escape sequence &#39;\[&#39;
   pattern = &quot;\[\[Category:(.*?)(?:\|.*?|)\]\]&quot;
 </pre></div>
 </div>
@@ -1411,7 +1411,7 @@ ccTLD: [[.uk]] / [[.gb]]&lt;ref&gt;使用は.ukに比べ圧倒的少数。&lt;/r
 <section id="id7">
 <h2>26. 強調マークアップの除去<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
 <p>25の処理時に, テンプレートの値からMediaWikiの強調マークアップ (弱い強調, 強調, 強い強調のすべて) を除去してテキストに変換せよ (参考: <a class="reference external" href="http://ja.wikipedia.org/wiki/Help:%E6%97%A9%E8%A6%8B%E8%A1%A8">マークアップ早見表</a>).</p>
-<div class="cell docutils container">
+<div class="cell tag_scroll-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
 
@@ -1494,7 +1494,7 @@ ccTLD: [[.uk]] / [[.gb]]&lt;ref&gt;使用は.ukに比べ圧倒的少数。&lt;/r
 <section id="id8">
 <h2>27. 内部リンクの除去<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
 <p>26の処理に加えて, テンプレートの値からMediaWikiの内部リンクマークアップを除去し, テキストに変換せよ (参考: <a class="reference external" href="http://ja.wikipedia.org/wiki/Help:%E6%97%A9%E8%A6%8B%E8%A1%A8">マークアップ早見表</a>).</p>
-<div class="cell docutils container">
+<div class="cell tag_scroll-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
 
@@ -1582,7 +1582,7 @@ ccTLD: .uk / .gb&lt;ref&gt;使用は.ukに比べ圧倒的少数。&lt;/ref&gt;
 <p class="admonition-title">Warning</p>
 <p>Not exactly...</p>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_scroll-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
 
