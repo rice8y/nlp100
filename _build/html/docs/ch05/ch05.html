@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>第5章: 係り受け解析 &#8212; NLP 100 Exercise</title>
+    <title>第5章: 大規模言語モデル &#8212; NLP 100 Exercise</title>
   
   
   
@@ -178,7 +178,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../ch02/ch02.html">第2章: UNIXコマンド</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ch03/ch03.html">第3章: 正規表現</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ch04/ch04.html">第4章: 形態素解析</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">第5章: 係り受け解析</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">第5章: 大規模言語モデル</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ch06/ch06.html">第6章: 機械学習</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ch07/ch07.html">第7章: 単語ベクトル</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ch08/ch08.html">第8章: ニューラルネット</a></li>
@@ -396,7 +396,9 @@
 <button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
 </button>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -407,11 +409,27 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>第5章: 係り受け解析</h1>
+    <h1>第5章: 大規模言語モデル</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#zero-shot">40. Zero-Shot推論</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#few-shot">41. Few-Shot推論</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">42. 多肢選択問題の正解率</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">43. 応答のバイアス</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">44. 対話</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">46. 川柳の生成</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#llm">47. LLMによる評価</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">48. LLMによる評価の頑健性</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">49. トークン化</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -422,11 +440,359 @@
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
-<h1>第5章: 係り受け解析<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Upcoming...</p>
+<h1>第5章: 大規模言語モデル<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p>この章では, 大規模言語モデル (LLM; Large Language Model) の利用し, 様々なタスクに取り組む. 大規模言語モデルをプログラムからAPI経由で呼び出すことを想定しており, そのAPIの利用で費用が発生する可能性があることに留意せよ.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>本章は, <code class="docutils literal notranslate"><span class="pre">code-cell</span></code> ではなく, Markdown のコードブロック内にコードを記述しているため, Google Colab上で直接実行できません.</p>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># !pip install vllm</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="zero-shot">
+<h2>40. Zero-Shot推論<a class="headerlink" href="#zero-shot" title="Link to this heading">#</a></h2>
+<p>以下の問題の解答を作成せよ. ただし, 解答生成はzero-shot推論とせよ.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>9世紀に活躍した人物に関係するできごとについて述べた次のア～ウを年代の古い順に正しく並べよ。
+
+ア　藤原時平は，策謀を用いて菅原道真を政界から追放した。
+イ　嵯峨天皇は，藤原冬嗣らを蔵人頭に任命した。
+ウ　藤原良房は，承和の変後，藤原氏の中での北家の優位を確立した。
+</pre></div>
+</div>
+<p>出典: <a class="reference external" href="https://www.mext.go.jp/a_menu/koutou/shiken/kakomon/1411255_00010.htm">令和5年度第1回高等学校卒業程度認定試験問題</a> <a class="reference external" href="https://www.mext.go.jp/content/20240523-mxt_syogai02-mext_000031286_03nihonshi.pdf">日本史AB</a> 問題 日本史B 1 問3</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoTokenizer</span>
+<span class="kn">from</span> <span class="nn">vllm</span> <span class="kn">import</span> <span class="n">LLM</span><span class="p">,</span> <span class="n">SamplingParams</span>
+
+<span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;tokyotech-llm/Llama-3.1-Swallow-8B-Instruct-v0.3&quot;</span>
+
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+<span class="n">llm</span> <span class="o">=</span> <span class="n">LLM</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+    <span class="n">tensor_parallel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float16&quot;</span>
+<span class="p">)</span>
+
+<span class="n">sampling_params</span> <span class="o">=</span> <span class="n">SamplingParams</span><span class="p">(</span>
+    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">top_p</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="s2">&quot;&lt;|eot_id|&gt;&quot;</span>
+<span class="p">)</span>
+
+<span class="n">system_prompt</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;あなたは日本の歴史学者です。&quot;</span>
+<span class="p">}</span>
+
+<span class="n">user_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;9世紀に活躍した人物に関係するできごとについて述べた次のア～ウを年代の古い順に正しく並べよ。</span>
+
+<span class="s2">ア　藤原時平は，策謀を用いて菅原道真を政界から追放した。</span>
+<span class="s2">イ　嵯峨天皇は，藤原冬嗣らを蔵人頭に任命した。</span>
+<span class="s2">ウ　藤原良房は，承和の変後，藤原氏の中での北家の優位を確立した。&quot;&quot;&quot;</span>
+
+<span class="n">message</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">system_prompt</span><span class="p">,</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">user_prompt</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">apply_chat_template</span><span class="p">(</span>
+    <span class="n">message</span><span class="p">,</span> <span class="n">tokenize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_generation_prompt</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">sampling_params</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;解答:&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>解答:<span class="w"> </span>正しい年代の古い順に並べると次のようになります。
+
+<span class="m">1</span>.<span class="w"> </span>**イ<span class="w">　</span>嵯峨天皇は，藤原冬嗣らを蔵人頭に任命した。**<span class="w"> </span><span class="o">(</span>809年<span class="o">)</span>
+<span class="m">2</span>.<span class="w"> </span>**ウ<span class="w">　</span>藤原良房は，承和の変後，藤原氏の中での北家の優位を確立した。**<span class="w"> </span><span class="o">(</span>842年<span class="o">)</span>
+<span class="m">3</span>.<span class="w"> </span>**ア<span class="w">　</span>藤原時平は，策謀を用いて菅原道真を政界から追放した。**<span class="w"> </span><span class="o">(</span>903年<span class="o">)</span>
+</pre></div>
+</div>
+</section>
+<section id="few-shot">
+<h2>41. Few-Shot推論<a class="headerlink" href="#few-shot" title="Link to this heading">#</a></h2>
+<p>以下の問題と解答を与え, 問題40で示した質問の解答をfew-shot推論（この場合は4-shot推論）で生成せよ.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>日本の近代化に関連するできごとについて述べた次のア～ウを年代の古い順に正しく並べよ。
+
+ア　府知事・県令からなる地方官会議が設置された。
+イ　廃藩置県が実施され，中央から府知事・県令が派遣される体制になった。
+ウ　すべての藩主が，天皇に領地と領民を返還した。
+
+解答: ウ→イ→ア
+</pre></div>
+</div>
+<p>出典: <a class="reference external" href="https://www.mext.go.jp/a_menu/koutou/shiken/kakomon/1411255_00010.htm">令和5年度第1回高等学校卒業程度認定試験問題</a> <a class="reference external" href="https://www.mext.go.jp/content/20240523-mxt_syogai02-mext_000031286_03nihonshi.pdf">日本史AB 問題</a> 日本史A 1 問8</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>江戸幕府の北方での対外的な緊張について述べた次の文ア～ウを年代の古い順に正しく並べよ。
+
+ア　レザノフが長崎に来航したが，幕府が冷淡な対応をしたため，ロシア船が樺太や択捉島を攻撃した。
+イ　ゴローウニンが国後島に上陸し，幕府の役人に捕らえられ抑留された。
+ウ　ラクスマンが根室に来航し，漂流民を届けるとともに通商を求めた。
+
+解答: ウ→ア→イ
+</pre></div>
+</div>
+<p>出典: <a class="reference external" href="https://www.mext.go.jp/a_menu/koutou/shiken/kakomon/1411255_00010.htm">令和5年度第1回高等学校卒業程度認定試験問題</a> <a class="reference external" href="https://www.mext.go.jp/content/20240523-mxt_syogai02-mext_000031286_03nihonshi.pdf">日本史AB 問題</a> 日本史B 3 問3</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>中居屋重兵衛の生涯の期間におこったできごとについて述べた次のア～ウを，年代の古い順に正しく並べよ。
+
+ア　アヘン戦争がおこり，清がイギリスに敗北した。
+イ　異国船打払令が出され，外国船を撃退することが命じられた。
+ウ　桜田門外の変がおこり，大老の井伊直弼が暗殺された。
+
+解答: イ→ア→ウ
+</pre></div>
+</div>
+<p>出典: <a class="reference external" href="https://www.mext.go.jp/a_menu/koutou/shiken/kakomon/1411255_00007.htm">令和4年度第1回高等学校卒業程度認定試験問題</a> <a class="reference external" href="https://www.mext.go.jp/content/20240513-mxt_syogai02-mext_00002452_03nihonshi.pdf">日本史 問題</a> 日本史A 1 問1</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>加藤高明が外務大臣として提言を行ってから、内閣総理大臣となり演説を行うまでの時期のできごとについて述べた次のア～ウを，年代の古い順に正しく並べよ。
+
+ア　朝鮮半島において，独立を求める大衆運動である三・一独立運動が展開された。
+イ　関東大震災後の混乱のなかで，朝鮮人や中国人に対する殺傷事件がおきた。
+ウ　日本政府が，袁世凱政府に対して二十一カ条の要求を突き付けた。
+
+解答: ウ→ア→イ
+</pre></div>
+</div>
+<p>出典: <a class="reference external" href="https://www.mext.go.jp/a_menu/koutou/shiken/kakomon/1411255_00007.htm">令和4年度第1回高等学校卒業程度認定試験問題</a> <a class="reference external" href="https://www.mext.go.jp/content/20240513-mxt_syogai02-mext_00002452_03nihonshi.pdf">日本史 問題</a> 日本史A 2 問4</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoTokenizer</span>
+<span class="kn">from</span> <span class="nn">vllm</span> <span class="kn">import</span> <span class="n">LLM</span><span class="p">,</span> <span class="n">SamplingParams</span>
+
+<span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;tokyotech-llm/Llama-3.1-Swallow-8B-Instruct-v0.3&quot;</span>
+
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+<span class="n">llm</span> <span class="o">=</span> <span class="n">LLM</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+    <span class="n">tensor_parallel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float16&quot;</span>
+<span class="p">)</span>
+
+<span class="n">sampling_params</span> <span class="o">=</span> <span class="n">SamplingParams</span><span class="p">(</span>
+    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">top_p</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="s2">&quot;&lt;|eot_id|&gt;&quot;</span>
+<span class="p">)</span>
+
+<span class="n">system_prompt</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;あなたは日本の歴史学者です。&quot;</span>
+<span class="p">}</span>
+
+<span class="n">fewshot_prompt</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;日本の近代化に関連するできごとについて述べた次のア～ウを年代の古い順に正しく並べよ。</span>
+
+<span class="s2">ア　府知事・県令からなる地方官会議が設置された。</span>
+<span class="s2">イ　廃藩置県が実施され，中央から府知事・県令が派遣される体制になった。</span>
+<span class="s2">ウ　すべての藩主が，天皇に領地と領民を返還した。&quot;&quot;&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;ウ→イ→ア&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;江戸幕府の北方での対外的な緊張について述べた次の文ア～ウを年代の古い順に正しく並べよ。</span>
+
+<span class="s2">ア　レザノフが長崎に来航したが，幕府が冷淡な対応をしたため，ロシア船が樺太や択捉島を攻撃した。</span>
+<span class="s2">イ　ゴローウニンが国後島に上陸し，幕府の役人に捕らえられ抑留された。</span>
+<span class="s2">ウ　ラクスマンが根室に来航し，漂流民を届けるとともに通商を求めた。&quot;&quot;&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;ウ→ア→イ&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;中居屋重兵衛の生涯の期間におこったできごとについて述べた次のア～ウを，年代の古い順に正しく並べよ。</span>
+
+<span class="s2">ア　アヘン戦争がおこり，清がイギリスに敗北した。</span>
+<span class="s2">イ　異国船打払令が出され，外国船を撃退することが命じられた。</span>
+<span class="s2">ウ　桜田門外の変がおこり，大老の井伊直弼が暗殺された。&quot;&quot;&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;イ→ア→ウ&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;加藤高明が外務大臣として提言を行ってから、内閣総理大臣となり演説を行うまでの時期のできごとについて述べた次のア～ウを，年代の古い順に正しく並べよ。</span>
+
+<span class="s2">ア　朝鮮半島において，独立を求める大衆運動である三・一独立運動が展開された。</span>
+<span class="s2">イ　関東大震災後の混乱のなかで，朝鮮人や中国人に対する殺傷事件がおきた。</span>
+<span class="s2">ウ　日本政府が，袁世凱政府に対して二十一カ条の要求を突き付けた。&quot;&quot;&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;ウ→ア→イ&quot;</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+
+<span class="n">user_prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;9世紀に活躍した人物に関係するできごとについて述べた次のア～ウを年代の古い順に正しく並べよ。</span>
+
+<span class="s2">ア　藤原時平は，策謀を用いて菅原道真を政界から追放した。</span>
+<span class="s2">イ　嵯峨天皇は，藤原冬嗣らを蔵人頭に任命した。</span>
+<span class="s2">ウ　藤原良房は，承和の変後，藤原氏の中での北家の優位を確立した。&quot;&quot;&quot;</span>
+
+<span class="n">message</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">system_prompt</span><span class="p">,</span>
+    <span class="o">*</span><span class="n">fewshot_prompt</span><span class="p">,</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">user_prompt</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">apply_chat_template</span><span class="p">(</span>
+    <span class="n">message</span><span class="p">,</span> <span class="n">tokenize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_generation_prompt</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">sampling_params</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;解答:&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>解答:<span class="w"> </span>イ→ウ→ア
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h2>42. 多肢選択問題の正解率<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p><a class="reference external" href="https://github.com/nlp-waseda/JMMLU">JMMLU</a> のいずれかの科目を大規模言語モデルに解答させ, その正解率を求めよ.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># !git clone https://github.com/nlp-waseda/JMMLU.git</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoTokenizer</span>
+<span class="kn">from</span> <span class="nn">vllm</span> <span class="kn">import</span> <span class="n">LLM</span><span class="p">,</span> <span class="n">SamplingParams</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;JMMLU/JMMLU/abstract_algebra.csv&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">,</span> <span class="s2">&quot;selA&quot;</span><span class="p">,</span> <span class="s2">&quot;selB&quot;</span><span class="p">,</span> <span class="s2">&quot;selC&quot;</span><span class="p">,</span> <span class="s2">&quot;selD&quot;</span><span class="p">,</span> <span class="s2">&quot;answer&quot;</span><span class="p">]</span>
+
+<span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;tokyotech-llm/Llama-3.1-Swallow-8B-Instruct-v0.3&quot;</span>
+
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+<span class="n">llm</span> <span class="o">=</span> <span class="n">LLM</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+    <span class="n">tensor_parallel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float16&quot;</span><span class="p">,</span> 
+<span class="p">)</span>
+
+<span class="n">sampling_params</span> <span class="o">=</span> <span class="n">SamplingParams</span><span class="p">(</span>
+    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">top_p</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="s2">&quot;&lt;|eot_id|&gt;&quot;</span>
+<span class="p">)</span>
+
+<span class="n">system_prompt</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;あなたは優れた抽象代数学の専門家です。以下の質問に対して所与の選択肢から正しい答えを選んでください。そのため、解答として許容される文字は「A」「B」「C」「D」のみです。解答は選択肢のいずれか1つを選ぶ形で行ってください。&quot;</span>
+<span class="p">}</span>
+
+<span class="n">valid_answers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">]</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">invalid_cnt</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="n">question_text</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;A: </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;selA&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> B: </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;selB&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> C: </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;selC&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> D: </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;selD&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+    <span class="n">user_prompt</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">question_text</span>
+    <span class="p">}</span>
+
+    <span class="n">message</span> <span class="o">=</span> <span class="p">[</span><span class="n">system_prompt</span><span class="p">,</span> <span class="n">user_prompt</span><span class="p">]</span>
+    
+    <span class="n">prompt</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">apply_chat_template</span><span class="p">(</span>
+        <span class="n">message</span><span class="p">,</span> <span class="n">tokenize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_generation_prompt</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="n">answer</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">sampling_params</span><span class="p">)</span>
+    <span class="n">answer</span> <span class="o">=</span> <span class="n">answer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">answers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">answer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_answers</span><span class="p">:</span>
+        <span class="n">clarification_prompt</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">system_prompt</span><span class="p">,</span>
+            <span class="n">user_prompt</span><span class="p">,</span>
+            <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">answer</span><span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;あなたの先ほどの回答「</span><span class="si">{</span><span class="n">answer</span><span class="si">}</span><span class="s2">」はラベル (A/B/C/D) のいずれでもありません。&quot;</span>
+                    <span class="s2">&quot;これは選択肢のどれに該当するか、ラベル (A/B/C/D) のみで1文字で答えてください。&quot;</span>
+                <span class="p">)</span>
+            <span class="p">},</span>
+        <span class="p">]</span>
+
+        <span class="n">clarification_text</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">apply_chat_template</span><span class="p">(</span>
+            <span class="n">clarification_prompt</span><span class="p">,</span> <span class="n">tokenize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_generation_prompt</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+        <span class="n">clarification_answers</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">clarification_text</span><span class="p">,</span> <span class="n">sampling_params</span><span class="p">)</span>
+        <span class="n">clarified_answer</span> <span class="o">=</span> <span class="n">clarification_answers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">answers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">clarified_answer</span> <span class="ow">in</span> <span class="n">valid_answers</span><span class="p">:</span>
+            <span class="n">answer</span> <span class="o">=</span> <span class="n">clarified_answer</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">answer</span> <span class="o">=</span> <span class="s2">&quot;Invalid&quot;</span>
+            <span class="n">invalid_cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">answer</span><span class="p">)</span>
+    
+<span class="n">valid_indices</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">valid_answers</span><span class="p">]</span>
+<span class="n">correct_predictions</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">predictions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;answer&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">valid_indices</span>
+<span class="p">]</span>
+
+<span class="n">accuracy</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">correct_predictions</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">correct_predictions</span><span class="p">)</span> <span class="k">if</span> <span class="n">correct_predictions</span> <span class="k">else</span> <span class="mf">0.0</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Accurasy: </span><span class="si">{</span><span class="n">accuracy</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">% (Number of invalid predictions: </span><span class="si">{</span><span class="n">invalid_cnt</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Accurasy:<span class="w"> </span><span class="m">33</span>.33%<span class="w"> </span><span class="o">(</span>Number<span class="w"> </span>of<span class="w"> </span>invalid<span class="w"> </span>predictions:<span class="w"> </span><span class="m">3</span><span class="o">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h2>43. 応答のバイアス<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>問題42において, 実験設定を変化させると正解率が変化するかどうかを調べよ. 実験設定の例としては, 大規模言語モデルの温度パラメータ, プロンプト, 多肢選択肢の順番, 多肢選択肢の記号などが考えられる.</p>
+<p>正解の選択肢を全てDに入れ替えて解答させる例.</p>
+</section>
+<section id="id4">
+<h2>44. 対話<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>以下の問いかけに対する応答を生成せよ.</p>
+<blockquote>
+<div><p>つばめちゃんは渋谷駅から東急東横線に乗り、自由が丘駅で乗り換えました。東急大井町線の大井町方面の電車に乗り換えたとき、各駅停車に乗車すべきところ、間違えて急行に乗車してしまったことに気付きました。自由が丘の次の急行停車駅で降車し、反対方向の電車で一駅戻った駅がつばめちゃんの目的地でした。目的地の駅の名前を答えてください。</p>
+</div></blockquote>
+<p>参考: <a class="reference external" href="https://www.tokyu.co.jp/railway/station/map.html">東急線・みなとみらい線路線案内</a></p>
+</section>
+<section id="id5">
+<h2>46. 川柳の生成<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>適当なお題を設定し, 川柳の案を10個作成せよ.</p>
+</section>
+<section id="llm">
+<h2>47. LLMによる評価<a class="headerlink" href="#llm" title="Link to this heading">#</a></h2>
+<p>大規模言語モデルを評価者 (ジャッジ) として, 問題46の川柳の面白さを10段階で評価せよ.</p>
+</section>
+<section id="id6">
+<h2>48. LLMによる評価の頑健性<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<p>問題47で行ったLLMによるテキストの評価に関して, その頑健さ (脆弱さ) を調査せよ. 最も単純な方法は, 同じ評価を何回か繰り返した時のスコアの分散を調べることであろう. また, 川柳の末尾に特定のメッセージを追加することで, 評価スコアを恣意的に操作することも可能であろう.</p>
+</section>
+<section id="id7">
+<h2>49. トークン化<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<p>以下の文章 (夏目漱石の『吾輩は猫である』の冒頭部分) のトークン数を計測せよ.</p>
+<blockquote>
+<div><p>吾輩は猫である。名前はまだ無い。</p>
+<p>どこで生れたかとんと見当がつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。吾輩はここで始めて人間というものを見た。しかもあとで聞くとそれは書生という人間中で一番獰悪な種族であったそうだ。この書生というのは時々我々を捕えて煮て食うという話である。しかしその当時は何という考もなかったから別段恐しいとも思わなかった。ただ彼の掌に載せられてスーと持ち上げられた時何だかフワフワした感じがあったばかりである。掌の上で少し落ちついて書生の顔を見たのがいわゆる人間というものの見始であろう。この時妙なものだと思った感じが今でも残っている。第一毛をもって装飾されべきはずの顔がつるつるしてまるで薬缶だ。その後猫にもだいぶ逢ったがこんな片輪には一度も出会わした事がない。のみならず顔の真中があまりに突起している。そうしてその穴の中から時々ぷうぷうと煙を吹く。どうも咽せぽくて実に弱った。これが人間の飲む煙草というものである事はようやくこの頃知った。</p>
+</div></blockquote>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -483,6 +849,30 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#zero-shot">40. Zero-Shot推論</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#few-shot">41. Few-Shot推論</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">42. 多肢選択問題の正解率</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">43. 応答のバイアス</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">44. 対話</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">46. 川柳の生成</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#llm">47. LLMによる評価</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">48. LLMによる評価の頑健性</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">49. トークン化</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

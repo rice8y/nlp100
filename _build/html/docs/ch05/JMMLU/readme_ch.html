@@ -1,0 +1,782 @@
+
+<!DOCTYPE html>
+
+
+<html lang="unknown" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>JMMLU &#8212; NLP 100 Exercise</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css?v=4c969af8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/proof.css?v=b4b7a797" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../../_static/documentation_options.js?v=f3cbe567"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=7f8ff830"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../../_static/tabs.js?v=3ee01567"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'docs/ch05/JMMLU/readme_ch';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="canonical" href="https://rice8y.github.io/nlp100/docs/ch05/JMMLU/readme_ch.html" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="unknown"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/logo.png" class="logo__image only-light" alt="NLP 100 Exercise - Home"/>
+    <img src="../../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="NLP 100 Exercise - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    言語処理100本ノック
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ch01/ch01.html">第1章: 準備運動</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ch02/ch02.html">第2章: UNIXコマンド</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ch03/ch03.html">第3章: 正規表現</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ch04/ch04.html">第4章: 形態素解析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ch05.html">第5章: 大規模言語モデル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ch06/ch06.html">第6章: 機械学習</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ch07/ch07.html">第7章: 単語ベクトル</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ch08/ch08.html">第8章: ニューラルネット</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ch09/ch09.html">第9章: RNN,CNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ch10/ch10.html">第10章: 機械翻訳</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/rice8y/nlp100" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/rice8y/nlp100/edit/main/docs/ch05/JMMLU/readme_ch.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/rice8y/nlp100/issues/new?title=Issue%20on%20page%20%2Fdocs/ch05/JMMLU/readme_ch.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/docs/ch05/JMMLU/readme_ch.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>JMMLU</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">JMMLU</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">致谢</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="jmmlu">
+<h1>JMMLU<a class="headerlink" href="#jmmlu" title="Link to this heading">#</a></h1>
+<p>日语多任务语言理解基准测试</p>
+<p><a class="reference internal" href="README.html"><span class="std std-doc">日本語🇯🇵</span></a> | <a class="reference internal" href="readme_en.html"><span class="std std-doc">English🇬🇧</span></a> | 中文🇨🇳</p>
+<p>JMMLU由MMLU (<a class="reference external" href="https://arxiv.org/abs/2009.03300">Paper</a>, <a class="reference external" href="https://github.com/hendrycks/test">Github</a>)的日语翻译和基于日本独特文化背景的内容两部分构成的四选一问题基准测试。</p>
+<p>我们首先从MMLU的57项任务中每项最多选取150个问题机器翻译成日语。 然后由翻译人员检查机器翻译结果并删除难以翻译或与日本文化不相关或冲突的问题和任务。</p>
+<p>剩下的问题则经过校对和修改使之成为流畅的日语。</p>
+<p>此外还增加了公民和日本史等基于日本学校教纲的问题的科目。这些问题由日语母语的教师获教育工作者手工编写。</p>
+<p>格式与MMLU相同:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">问题</span><span class="p">,</span> <span class="n">选项A</span><span class="p">,</span> <span class="n">选项B</span><span class="p">,</span> <span class="n">选项C</span><span class="p">,</span> <span class="n">选项D</span><span class="p">,</span> <span class="n">答案</span>
+</pre></div>
+</div>
+<p>JMMLU有如下56个任务（科目）， 7,536 个问题。其中在JMMLU文件夹的53个任务，7,097问许可证为CC BY-SA 4.0，在JMMLU_NC_ND文件夹下的3个任务，439问许可证为CC BY-NC-ND 4.0。</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>任务名</p></th>
+<th class="head"><p>英语任务名</p></th>
+<th class="head text-right"><p>件数</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>専門医学</p></td>
+<td><p>professional_medicine</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-odd"><td><p>専門心理学</p></td>
+<td><p>professional_psychology</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-even"><td><p>専門会計</p></td>
+<td><p>professional_accounting</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-odd"><td><p>哲学</p></td>
+<td><p>philosophy</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-even"><td><p>雑学</p></td>
+<td><p>miscellaneous</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-odd"><td><p>医学遺伝学</p></td>
+<td><p>medical_genetics</p></td>
+<td class="text-right"><p>99</p></td>
+</tr>
+<tr class="row-even"><td><p>形式論理</p></td>
+<td><p>formal_logic</p></td>
+<td class="text-right"><p>125</p></td>
+</tr>
+<tr class="row-odd"><td><p>先史学</p></td>
+<td><p>prehistory</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-even"><td><p>天文学</p></td>
+<td><p>astronomy</p></td>
+<td class="text-right"><p>148</p></td>
+</tr>
+<tr class="row-odd"><td><p>熟語</p></td>
+<td><p>japanese_idiom</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-even"><td><p>世界宗教</p></td>
+<td><p>world_religions</p></td>
+<td class="text-right"><p>147</p></td>
+</tr>
+<tr class="row-odd"><td><p>世界事実</p></td>
+<td><p>global_facts</p></td>
+<td class="text-right"><p>97</p></td>
+</tr>
+<tr class="row-even"><td><p>世界史</p></td>
+<td><p>world_history</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-odd"><td><p>社会学</p></td>
+<td><p>sociology</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-even"><td><p>栄養学</p></td>
+<td><p>nutrition</p></td>
+<td class="text-right"><p>149</p></td>
+</tr>
+<tr class="row-odd"><td><p>日本史</p></td>
+<td><p>japanese_history</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-even"><td><p>日本地理</p></td>
+<td><p>japanese_geography</p></td>
+<td class="text-right"><p>139</p></td>
+</tr>
+<tr class="row-odd"><td><p>人間の老化</p></td>
+<td><p>human_aging</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-even"><td><p>論理学</p></td>
+<td><p>logical_fallacies</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-odd"><td><p>倫理的議論</p></td>
+<td><p>moral_disputes</p></td>
+<td class="text-right"><p>148</p></td>
+</tr>
+<tr class="row-even"><td><p>臨床知識</p></td>
+<td><p>clinical_knowledge</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-odd"><td><p>経営学</p></td>
+<td><p>management</p></td>
+<td class="text-right"><p>102</p></td>
+</tr>
+<tr class="row-even"><td><p>解剖学</p></td>
+<td><p>anatomy</p></td>
+<td class="text-right"><p>132</p></td>
+</tr>
+<tr class="row-odd"><td><p>計量経済学</p></td>
+<td><p>econometrics</p></td>
+<td class="text-right"><p>113</p></td>
+</tr>
+<tr class="row-even"><td><p>機械学習</p></td>
+<td><p>machine_learning</p></td>
+<td class="text-right"><p>111</p></td>
+</tr>
+<tr class="row-odd"><td><p>国際法</p></td>
+<td><p>international_law</p></td>
+<td class="text-right"><p>120</p></td>
+</tr>
+<tr class="row-even"><td><p>公民</p></td>
+<td><p>japanese_civics</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-odd"><td><p>公共関係</p></td>
+<td><p>public_relations</p></td>
+<td class="text-right"><p>109</p></td>
+</tr>
+<tr class="row-even"><td><p>高校心理学</p></td>
+<td><p>high_school_psychology</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-odd"><td><p>高校物理</p></td>
+<td><p>high_school_physics</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-even"><td><p>高校統計学</p></td>
+<td><p>high_school_statistics</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-odd"><td><p>高校数学</p></td>
+<td><p>high_school_mathematics</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-even"><td><p>高校生物学</p></td>
+<td><p>high_school_biology</p></td>
+<td class="text-right"><p>148</p></td>
+</tr>
+<tr class="row-odd"><td><p>高校情報科学</p></td>
+<td><p>high_school_computer_science</p></td>
+<td class="text-right"><p>98</p></td>
+</tr>
+<tr class="row-even"><td><p>高校化学</p></td>
+<td><p>high_school_chemistry</p></td>
+<td class="text-right"><p>149</p></td>
+</tr>
+<tr class="row-odd"><td><p>高校地理</p></td>
+<td><p>high_school_geography</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-even"><td><p>高校ヨーロッパ史</p></td>
+<td><p>high_school_european_history</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-odd"><td><p>高校ミクロ経済学</p></td>
+<td><p>high_school_microeconomics</p></td>
+<td class="text-right"><p>149</p></td>
+</tr>
+<tr class="row-even"><td><p>高校マクロ経済学</p></td>
+<td><p>high_school_macroeconomics</p></td>
+<td class="text-right"><p>148</p></td>
+</tr>
+<tr class="row-odd"><td><p>概念物理学</p></td>
+<td><p>conceptual_physics</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-even"><td><p>法理学</p></td>
+<td><p>jurisprudence</p></td>
+<td class="text-right"><p>107</p></td>
+</tr>
+<tr class="row-odd"><td><p>電気工学</p></td>
+<td><p>electrical_engineering</p></td>
+<td class="text-right"><p>144</p></td>
+</tr>
+<tr class="row-even"><td><p>大学医学</p></td>
+<td><p>college_medicine</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-odd"><td><p>大学物理</p></td>
+<td><p>college_physics</p></td>
+<td class="text-right"><p>100</p></td>
+</tr>
+<tr class="row-even"><td><p>大学数学</p></td>
+<td><p>college_mathematics</p></td>
+<td class="text-right"><p>99</p></td>
+</tr>
+<tr class="row-odd"><td><p>大学生物学</p></td>
+<td><p>college_biology</p></td>
+<td class="text-right"><p>143</p></td>
+</tr>
+<tr class="row-even"><td><p>大学化学</p></td>
+<td><p>college_chemistry</p></td>
+<td class="text-right"><p>99</p></td>
+</tr>
+<tr class="row-odd"><td><p>大学コンピュータ科学</p></td>
+<td><p>college_computer_science</p></td>
+<td class="text-right"><p>99</p></td>
+</tr>
+<tr class="row-even"><td><p>初等数学</p></td>
+<td><p>elementary_mathematics</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-odd"><td><p>抽象代数</p></td>
+<td><p>abstract_algebra</p></td>
+<td class="text-right"><p>99</p></td>
+</tr>
+<tr class="row-even"><td><p>マーケティング</p></td>
+<td><p>marketing</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-odd"><td><p>ビジネス倫理</p></td>
+<td><p>business_ethics</p></td>
+<td class="text-right"><p>86</p></td>
+</tr>
+<tr class="row-even"><td><p>セクシュアリティ</p></td>
+<td><p>human_sexuality</p></td>
+<td class="text-right"><p>130</p></td>
+</tr>
+<tr class="row-odd"><td><p>セキュリティ研究</p></td>
+<td><p>security_studies</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+<tr class="row-even"><td><p>コンピュータセキュリティ</p></td>
+<td><p>computer_security</p></td>
+<td class="text-right"><p>99</p></td>
+</tr>
+<tr class="row-odd"><td><p>ウイルス学</p></td>
+<td><p>virology</p></td>
+<td class="text-right"><p>150</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>日语和世界历史的版权归 STEP Corporation 所有，除用于研究和评估语言模型外，禁止用于其他商业用途。</p>
+<p>日语成语、公民和日本地理的版权归VIST学习塾所有，采用 CC BY-NC-ND 4.0 许可证。仅允许研究和评估语言模型的商业用途。</p>
+<p>Shield: <a class="reference external" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="CC BY-SA 4.0" src="https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg" /></a></p>
+<p>This work is licensed under a
+<a class="reference external" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>
+<p><a class="reference external" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="CC BY-SA 4.0" src="https://licensebuttons.net/l/by-sa/4.0/88x31.png" /></a></p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>致谢<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p>本研究的MMLU翻译工作得到了理化学研究所的大力支持，在此深表感谢。 我们还衷心感谢 Step Corporation 提供的日本历史和社会历史内容，以及VIST学习塾提供的日语成语、公民和日本地理。</p>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./docs/ch05/JMMLU"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">JMMLU</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">致谢</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Eito YONEYAMA
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+<script src="https://utteranc.es/client.js"
+repo="rice8y/nlp100"
+issue-term="title"
+label="💬"
+theme="github-light"
+crossorigin="anonymous"
+async>
+</script>
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
