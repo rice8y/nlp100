@@ -39,6 +39,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=4c969af8" />
     <link rel="stylesheet" type="text/css" href="../../_static/proof.css?v=b4b7a797" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
@@ -464,7 +465,7 @@
 </pre></div>
 </div>
 <p>出典: <a class="reference external" href="https://www.mext.go.jp/a_menu/koutou/shiken/kakomon/1411255_00010.htm">令和5年度第1回高等学校卒業程度認定試験問題</a> <a class="reference external" href="https://www.mext.go.jp/content/20240523-mxt_syogai02-mext_000031286_03nihonshi.pdf">日本史AB</a> 問題 日本史B 1 問3</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoTokenizer</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoTokenizer</span>
 <span class="kn">from</span> <span class="nn">vllm</span> <span class="kn">import</span> <span class="n">LLM</span><span class="p">,</span> <span class="n">SamplingParams</span>
 
 <span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;tokyotech-llm/Llama-3.1-Swallow-8B-Instruct-v0.3&quot;</span>
