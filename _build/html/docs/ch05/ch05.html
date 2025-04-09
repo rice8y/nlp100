@@ -1134,6 +1134,73 @@
 <section id="id7">
 <h2>48. LLMによる評価の頑健性<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
 <p>問題47で行ったLLMによるテキストの評価に関して, その頑健さ (脆弱さ) を調査せよ. 最も単純な方法は, 同じ評価を何回か繰り返した時のスコアの分散を調べることであろう. また, 川柳の末尾に特定のメッセージを追加することで, 評価スコアを恣意的に操作することも可能であろう.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoTokenizer</span>
+<span class="kn">from</span> <span class="nn">vllm</span> <span class="kn">import</span> <span class="n">LLM</span><span class="p">,</span> <span class="n">SamplingParams</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;tokyotech-llm/Llama-3.1-Swallow-8B-Instruct-v0.3&quot;</span>
+
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+<span class="n">llm</span> <span class="o">=</span> <span class="n">LLM</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+    <span class="n">tensor_parallel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float16&quot;</span>
+<span class="p">)</span>
+
+<span class="n">sampling_params</span> <span class="o">=</span> <span class="n">SamplingParams</span><span class="p">(</span>
+    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">top_p</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="s2">&quot;&lt;|eot_id|&gt;&quot;</span>
+<span class="p">)</span>
+
+<span class="n">system_prompt</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>   
+    <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;あなたは日本の川柳評論家です。以下に、「春」をお題とした川柳を示します。その川柳の面白さを1～10の10段階で評価してください。ただし、許容される出力は「1」から「10」までの整数値で、出力可能トークン数は1です。&quot;</span>
+<span class="p">}</span>
+
+<span class="n">senryu_examples</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;桜舞う　風に誘われて　花見行く&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;鳥のさえずり　朝の光に　春を告げる&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;雪解け水　田んぼに湧き　命の息吹&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;芽吹き出す　緑の葉　春の息吹&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;夕暮れ時　茜色に染まる　春の空&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;雲一つ　浮かぶ青空　春の始まり&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;温かい日差し　心も軽く　笑顔が溢れる&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;雪解け水　小川の流れ　春を運ぶ&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;花々咲き　世界は彩り　春の魔法&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;春の息吹　新しい始まり　希望に満ちて&quot;</span>
+<span class="p">]</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">senryu</span> <span class="ow">in</span> <span class="n">senryu_examples</span><span class="p">:</span>
+        <span class="n">user_prompt</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">senryu</span><span class="p">}</span>
+
+        <span class="n">message</span> <span class="o">=</span> <span class="p">[</span><span class="n">system_prompt</span><span class="p">,</span> <span class="n">user_prompt</span><span class="p">]</span>
+
+        <span class="n">prompt</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">apply_chat_template</span><span class="p">(</span>
+            <span class="n">message</span><span class="p">,</span> <span class="n">tokenize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_generation_prompt</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+        <span class="n">outputs</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">sampling_params</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid output: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">scores</span><span class="p">))</span>
+
+<span class="n">variance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;分散: </span><span class="si">{</span><span class="n">variance</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">分散</span><span class="p">:</span> <span class="mf">0.49000000000000005</span>
+</pre></div>
+</div>
 </section>
 <section id="id8">
 <h2>49. トークン化<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
