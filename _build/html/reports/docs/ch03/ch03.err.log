@@ -1,0 +1,137 @@
+Traceback (most recent call last):
+  File "/home/yoneyama/base/lib/python3.12/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/home/yoneyama/base/lib/python3.12/site-packages/nbclient/client.py", line 1314, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yoneyama/base/lib/python3.12/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/yoneyama/base/lib/python3.12/site-packages/nbclient/client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "/home/yoneyama/base/lib/python3.12/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/yoneyama/base/lib/python3.12/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+import urllib
+
+url = 'https://www.mediawiki.org/w/api.php?action=query&titles=File:' + urllib.parse.quote(info_dict['国旗画像']) + '&format=json&prop=imageinfo&iiprop=url'
+connection = urllib.request.urlopen(urllib.request.Request(url))
+response = json.loads(connection.read().decode())
+iurl = response['query']['pages']['-1']['imageinfo'][0]['url']
+print(iurl)
+------------------
+
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mgaierror[0m                                  Traceback (most recent call last)
+File [0;32m/usr/lib/python3.12/urllib/request.py:1344[0m, in [0;36mAbstractHTTPHandler.do_open[0;34m(self, http_class, req, **http_conn_args)[0m
+[1;32m   1343[0m [38;5;28;01mtry[39;00m:
+[0;32m-> 1344[0m     [43mh[49m[38;5;241;43m.[39;49m[43mrequest[49m[43m([49m[43mreq[49m[38;5;241;43m.[39;49m[43mget_method[49m[43m([49m[43m)[49m[43m,[49m[43m [49m[43mreq[49m[38;5;241;43m.[39;49m[43mselector[49m[43m,[49m[43m [49m[43mreq[49m[38;5;241;43m.[39;49m[43mdata[49m[43m,[49m[43m [49m[43mheaders[49m[43m,[49m
+[1;32m   1345[0m [43m              [49m[43mencode_chunked[49m[38;5;241;43m=[39;49m[43mreq[49m[38;5;241;43m.[39;49m[43mhas_header[49m[43m([49m[38;5;124;43m'[39;49m[38;5;124;43mTransfer-encoding[39;49m[38;5;124;43m'[39;49m[43m)[49m[43m)[49m
+[1;32m   1346[0m [38;5;28;01mexcept[39;00m [38;5;167;01mOSError[39;00m [38;5;28;01mas[39;00m err: [38;5;66;03m# timeout error[39;00m
+
+File [0;32m/usr/lib/python3.12/http/client.py:1336[0m, in [0;36mHTTPConnection.request[0;34m(self, method, url, body, headers, encode_chunked)[0m
+[1;32m   1335[0m [38;5;250m[39m[38;5;124;03m"""Send a complete request to the server."""[39;00m
+[0;32m-> 1336[0m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_send_request[49m[43m([49m[43mmethod[49m[43m,[49m[43m [49m[43murl[49m[43m,[49m[43m [49m[43mbody[49m[43m,[49m[43m [49m[43mheaders[49m[43m,[49m[43m [49m[43mencode_chunked[49m[43m)[49m
+
+File [0;32m/usr/lib/python3.12/http/client.py:1382[0m, in [0;36mHTTPConnection._send_request[0;34m(self, method, url, body, headers, encode_chunked)[0m
+[1;32m   1381[0m     body [38;5;241m=[39m _encode(body, [38;5;124m'[39m[38;5;124mbody[39m[38;5;124m'[39m)
+[0;32m-> 1382[0m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mendheaders[49m[43m([49m[43mbody[49m[43m,[49m[43m [49m[43mencode_chunked[49m[38;5;241;43m=[39;49m[43mencode_chunked[49m[43m)[49m
+
+File [0;32m/usr/lib/python3.12/http/client.py:1331[0m, in [0;36mHTTPConnection.endheaders[0;34m(self, message_body, encode_chunked)[0m
+[1;32m   1330[0m     [38;5;28;01mraise[39;00m CannotSendHeader()
+[0;32m-> 1331[0m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_send_output[49m[43m([49m[43mmessage_body[49m[43m,[49m[43m [49m[43mencode_chunked[49m[38;5;241;43m=[39;49m[43mencode_chunked[49m[43m)[49m
+
+File [0;32m/usr/lib/python3.12/http/client.py:1091[0m, in [0;36mHTTPConnection._send_output[0;34m(self, message_body, encode_chunked)[0m
+[1;32m   1090[0m [38;5;28;01mdel[39;00m [38;5;28mself[39m[38;5;241m.[39m_buffer[:]
+[0;32m-> 1091[0m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43msend[49m[43m([49m[43mmsg[49m[43m)[49m
+[1;32m   1093[0m [38;5;28;01mif[39;00m message_body [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m:
+[1;32m   1094[0m 
+[1;32m   1095[0m     [38;5;66;03m# create a consistent interface to message_body[39;00m
+
+File [0;32m/usr/lib/python3.12/http/client.py:1035[0m, in [0;36mHTTPConnection.send[0;34m(self, data)[0m
+[1;32m   1034[0m [38;5;28;01mif[39;00m [38;5;28mself[39m[38;5;241m.[39mauto_open:
+[0;32m-> 1035[0m     [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mconnect[49m[43m([49m[43m)[49m
+[1;32m   1036[0m [38;5;28;01melse[39;00m:
+
+File [0;32m/usr/lib/python3.12/http/client.py:1470[0m, in [0;36mHTTPSConnection.connect[0;34m(self)[0m
+[1;32m   1468[0m [38;5;124m"[39m[38;5;124mConnect to a host on a given (SSL) port.[39m[38;5;124m"[39m
+[0;32m-> 1470[0m [38;5;28;43msuper[39;49m[43m([49m[43m)[49m[38;5;241;43m.[39;49m[43mconnect[49m[43m([49m[43m)[49m
+[1;32m   1472[0m [38;5;28;01mif[39;00m [38;5;28mself[39m[38;5;241m.[39m_tunnel_host:
+
+File [0;32m/usr/lib/python3.12/http/client.py:1001[0m, in [0;36mHTTPConnection.connect[0;34m(self)[0m
+[1;32m   1000[0m sys[38;5;241m.[39maudit([38;5;124m"[39m[38;5;124mhttp.client.connect[39m[38;5;124m"[39m, [38;5;28mself[39m, [38;5;28mself[39m[38;5;241m.[39mhost, [38;5;28mself[39m[38;5;241m.[39mport)
+[0;32m-> 1001[0m [38;5;28mself[39m[38;5;241m.[39msock [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_create_connection[49m[43m([49m
+[1;32m   1002[0m [43m    [49m[43m([49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mhost[49m[43m,[49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mport[49m[43m)[49m[43m,[49m[43m [49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mtimeout[49m[43m,[49m[43m [49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43msource_address[49m[43m)[49m
+[1;32m   1003[0m [38;5;66;03m# Might fail in OSs that don't implement TCP_NODELAY[39;00m
+
+File [0;32m/usr/lib/python3.12/socket.py:828[0m, in [0;36mcreate_connection[0;34m(address, timeout, source_address, all_errors)[0m
+[1;32m    827[0m exceptions [38;5;241m=[39m []
+[0;32m--> 828[0m [38;5;28;01mfor[39;00m res [38;5;129;01min[39;00m [43mgetaddrinfo[49m[43m([49m[43mhost[49m[43m,[49m[43m [49m[43mport[49m[43m,[49m[43m [49m[38;5;241;43m0[39;49m[43m,[49m[43m [49m[43mSOCK_STREAM[49m[43m)[49m:
+[1;32m    829[0m     af, socktype, proto, canonname, sa [38;5;241m=[39m res
+
+File [0;32m/usr/lib/python3.12/socket.py:963[0m, in [0;36mgetaddrinfo[0;34m(host, port, family, type, proto, flags)[0m
+[1;32m    962[0m addrlist [38;5;241m=[39m []
+[0;32m--> 963[0m [38;5;28;01mfor[39;00m res [38;5;129;01min[39;00m [43m_socket[49m[38;5;241;43m.[39;49m[43mgetaddrinfo[49m[43m([49m[43mhost[49m[43m,[49m[43m [49m[43mport[49m[43m,[49m[43m [49m[43mfamily[49m[43m,[49m[43m [49m[38;5;28;43mtype[39;49m[43m,[49m[43m [49m[43mproto[49m[43m,[49m[43m [49m[43mflags[49m[43m)[49m:
+[1;32m    964[0m     af, socktype, proto, canonname, sa [38;5;241m=[39m res
+
+[0;31mgaierror[0m: [Errno -3] Temporary failure in name resolution
+
+During handling of the above exception, another exception occurred:
+
+[0;31mURLError[0m                                  Traceback (most recent call last)
+Cell [0;32mIn[11], line 4[0m
+[1;32m      1[0m [38;5;28;01mimport[39;00m [38;5;21;01murllib[39;00m
+[1;32m      3[0m url [38;5;241m=[39m [38;5;124m'[39m[38;5;124mhttps://www.mediawiki.org/w/api.php?action=query&titles=File:[39m[38;5;124m'[39m [38;5;241m+[39m urllib[38;5;241m.[39mparse[38;5;241m.[39mquote(info_dict[[38;5;124m'[39m[38;5;124m国旗画像[39m[38;5;124m'[39m]) [38;5;241m+[39m [38;5;124m'[39m[38;5;124m&format=json&prop=imageinfo&iiprop=url[39m[38;5;124m'[39m
+[0;32m----> 4[0m connection [38;5;241m=[39m [43murllib[49m[38;5;241;43m.[39;49m[43mrequest[49m[38;5;241;43m.[39;49m[43murlopen[49m[43m([49m[43murllib[49m[38;5;241;43m.[39;49m[43mrequest[49m[38;5;241;43m.[39;49m[43mRequest[49m[43m([49m[43murl[49m[43m)[49m[43m)[49m
+[1;32m      5[0m response [38;5;241m=[39m json[38;5;241m.[39mloads(connection[38;5;241m.[39mread()[38;5;241m.[39mdecode())
+[1;32m      6[0m iurl [38;5;241m=[39m response[[38;5;124m'[39m[38;5;124mquery[39m[38;5;124m'[39m][[38;5;124m'[39m[38;5;124mpages[39m[38;5;124m'[39m][[38;5;124m'[39m[38;5;124m-1[39m[38;5;124m'[39m][[38;5;124m'[39m[38;5;124mimageinfo[39m[38;5;124m'[39m][[38;5;241m0[39m][[38;5;124m'[39m[38;5;124murl[39m[38;5;124m'[39m]
+
+File [0;32m/usr/lib/python3.12/urllib/request.py:215[0m, in [0;36murlopen[0;34m(url, data, timeout, cafile, capath, cadefault, context)[0m
+[1;32m    213[0m [38;5;28;01melse[39;00m:
+[1;32m    214[0m     opener [38;5;241m=[39m _opener
+[0;32m--> 215[0m [38;5;28;01mreturn[39;00m [43mopener[49m[38;5;241;43m.[39;49m[43mopen[49m[43m([49m[43murl[49m[43m,[49m[43m [49m[43mdata[49m[43m,[49m[43m [49m[43mtimeout[49m[43m)[49m
+
+File [0;32m/usr/lib/python3.12/urllib/request.py:515[0m, in [0;36mOpenerDirector.open[0;34m(self, fullurl, data, timeout)[0m
+[1;32m    512[0m     req [38;5;241m=[39m meth(req)
+[1;32m    514[0m sys[38;5;241m.[39maudit([38;5;124m'[39m[38;5;124murllib.Request[39m[38;5;124m'[39m, req[38;5;241m.[39mfull_url, req[38;5;241m.[39mdata, req[38;5;241m.[39mheaders, req[38;5;241m.[39mget_method())
+[0;32m--> 515[0m response [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_open[49m[43m([49m[43mreq[49m[43m,[49m[43m [49m[43mdata[49m[43m)[49m
+[1;32m    517[0m [38;5;66;03m# post-process response[39;00m
+[1;32m    518[0m meth_name [38;5;241m=[39m protocol[38;5;241m+[39m[38;5;124m"[39m[38;5;124m_response[39m[38;5;124m"[39m
+
+File [0;32m/usr/lib/python3.12/urllib/request.py:532[0m, in [0;36mOpenerDirector._open[0;34m(self, req, data)[0m
+[1;32m    529[0m     [38;5;28;01mreturn[39;00m result
+[1;32m    531[0m protocol [38;5;241m=[39m req[38;5;241m.[39mtype
+[0;32m--> 532[0m result [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_call_chain[49m[43m([49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mhandle_open[49m[43m,[49m[43m [49m[43mprotocol[49m[43m,[49m[43m [49m[43mprotocol[49m[43m [49m[38;5;241;43m+[39;49m
+[1;32m    533[0m [43m                          [49m[38;5;124;43m'[39;49m[38;5;124;43m_open[39;49m[38;5;124;43m'[39;49m[43m,[49m[43m [49m[43mreq[49m[43m)[49m
+[1;32m    534[0m [38;5;28;01mif[39;00m result:
+[1;32m    535[0m     [38;5;28;01mreturn[39;00m result
+
+File [0;32m/usr/lib/python3.12/urllib/request.py:492[0m, in [0;36mOpenerDirector._call_chain[0;34m(self, chain, kind, meth_name, *args)[0m
+[1;32m    490[0m [38;5;28;01mfor[39;00m handler [38;5;129;01min[39;00m handlers:
+[1;32m    491[0m     func [38;5;241m=[39m [38;5;28mgetattr[39m(handler, meth_name)
+[0;32m--> 492[0m     result [38;5;241m=[39m [43mfunc[49m[43m([49m[38;5;241;43m*[39;49m[43margs[49m[43m)[49m
+[1;32m    493[0m     [38;5;28;01mif[39;00m result [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m:
+[1;32m    494[0m         [38;5;28;01mreturn[39;00m result
+
+File [0;32m/usr/lib/python3.12/urllib/request.py:1392[0m, in [0;36mHTTPSHandler.https_open[0;34m(self, req)[0m
+[1;32m   1391[0m [38;5;28;01mdef[39;00m [38;5;21mhttps_open[39m([38;5;28mself[39m, req):
+[0;32m-> 1392[0m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mdo_open[49m[43m([49m[43mhttp[49m[38;5;241;43m.[39;49m[43mclient[49m[38;5;241;43m.[39;49m[43mHTTPSConnection[49m[43m,[49m[43m [49m[43mreq[49m[43m,[49m
+[1;32m   1393[0m [43m                        [49m[43mcontext[49m[38;5;241;43m=[39;49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_context[49m[43m)[49m
+
+File [0;32m/usr/lib/python3.12/urllib/request.py:1347[0m, in [0;36mAbstractHTTPHandler.do_open[0;34m(self, http_class, req, **http_conn_args)[0m
+[1;32m   1344[0m         h[38;5;241m.[39mrequest(req[38;5;241m.[39mget_method(), req[38;5;241m.[39mselector, req[38;5;241m.[39mdata, headers,
+[1;32m   1345[0m                   encode_chunked[38;5;241m=[39mreq[38;5;241m.[39mhas_header([38;5;124m'[39m[38;5;124mTransfer-encoding[39m[38;5;124m'[39m))
+[1;32m   1346[0m     [38;5;28;01mexcept[39;00m [38;5;167;01mOSError[39;00m [38;5;28;01mas[39;00m err: [38;5;66;03m# timeout error[39;00m
+[0;32m-> 1347[0m         [38;5;28;01mraise[39;00m URLError(err)
+[1;32m   1348[0m     r [38;5;241m=[39m h[38;5;241m.[39mgetresponse()
+[1;32m   1349[0m [38;5;28;01mexcept[39;00m:
+
+[0;31mURLError[0m: <urlopen error [Errno -3] Temporary failure in name resolution>
+
