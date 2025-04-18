@@ -461,7 +461,6 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">google.generativeai</span> <span class="k">as</span> <span class="nn">genai</span>
 
-
 <span class="n">genai</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;GOOGLE_API_KEY&quot;</span><span class="p">])</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">genai</span><span class="o">.</span><span class="n">GenerativeModel</span><span class="p">(</span>
@@ -476,18 +475,20 @@
 <span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">あなたは日本の歴史学者です。次の問題に解答してください。</span>
 
-</pre></div>
-</div>
-<p>9世紀に活躍した人物に関係するできごとについて述べた次のア～ウを年代の古い順に正しく並べよ。</p>
-<p>ア　藤原時平は，策謀を用いて菅原道真を政界から追放した。
-イ　嵯峨天皇は，藤原冬嗣らを蔵人頭に任命した。
-ウ　藤原良房は，承和の変後，藤原氏の中での北家の優位を確立した。</p>
-<p>解答：</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">```</span>
+<span class="s2">9世紀に活躍した人物に関係するできごとについて述べた次のア～ウを年代の古い順に正しく並べよ。</span>
 
-<span class="s2">response = model.generate_content(prompt).text</span>
+<span class="s2">ア　藤原時平は，策謀を用いて菅原道真を政界から追放した。</span>
+<span class="s2">イ　嵯峨天皇は，藤原冬嗣らを蔵人頭に任命した。</span>
+<span class="s2">ウ　藤原良房は，承和の変後，藤原氏の中での北家の優位を確立した。</span>
 
-<span class="s2">print(response)</span>
+<span class="s2">解答：</span>
+<span class="s2">```</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate_content</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>はい、承知いたしました。9世紀に活躍した人物に関連する出来事を年代の古い順に並べます。
