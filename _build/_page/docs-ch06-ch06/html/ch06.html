@@ -1,0 +1,987 @@
+
+<!DOCTYPE html>
+
+
+<html lang="unknown" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>第6章: 単語ベクトル &#8212; NLP 100 Exercise</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/tabs.css?v=4c969af8" />
+    <link rel="stylesheet" type="text/css" href="_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="_static/documentation_options.js?v=f3cbe567"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=7f8ff830"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="_static/tabs.js?v=3ee01567"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'ch06';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="canonical" href="https://rice8y.github.io/nlp100/ch06.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="unknown"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="#">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">NLP 100 Exercise</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1 current active">
+                <a class="reference internal" href="#">
+                    第6章: 単語ベクトル
+                </a>
+            </li>
+        </ul>
+        
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/rice8y/nlp100/blob/main/ch06.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Colab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Colab logo" src="_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/rice8y/nlp100" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/rice8y/nlp100/edit/main/ch06.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/rice8y/nlp100/issues/new?title=Issue%20on%20page%20%2Fch06.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/ch06.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>第6章: 単語ベクトル</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">50. 単語ベクトルの読み込みと表示</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">51. 単語の類似度</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">52. 類似度の高い単語10件</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">53. 加法構成性によるアナロジー</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">54. アナロジーデータでの実験</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">55. アナロジータスクでの正解率</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wordsimilarity-353">56. WordSimilarity-353での評価</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#k-means">57. k-meansクラスタリング</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ward">58. Ward法によるクラスタリング</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#t-sne">59. t-SNEによる可視化</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>第6章: 単語ベクトル<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
+<p>単語の意味を実ベクトルで表現する単語ベクトル (単語埋め込み) に関して, 以下の処理を行うプログラムを作成せよ.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>本章は, <code class="docutils literal notranslate"><span class="pre">code-cell</span></code> ではなく, Markdown のコードブロック内にコードを記述しているため, Google Colab上で直接実行できません.</p>
+</div>
+<section id="id2">
+<h2>50. 単語ベクトルの読み込みと表示<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>Google Newsデータセット (約1,000億単語) での<a class="reference external" href="https://drive.google.com/file/d/0B7XkCwpI5KDYNlNUTTlSS21pQmM/edit?usp=sharing">学習済み単語ベクトル</a> (300万単語・フレーズ, 300次元) をダウンロードし, &quot;United States&quot;の単語ベクトルを表示せよ. ただし, &quot;United States&quot;は内部的には&quot;United_States&quot;と表現されていることに注意せよ.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gensim.models</span> <span class="kn">import</span> <span class="n">KeyedVectors</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">cos_sim</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v2</span><span class="p">))</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">KeyedVectors</span><span class="o">.</span><span class="n">load_word2vec_format</span><span class="p">(</span><span class="s2">&quot;GoogleNews-vectors-negative300.bin.gz&quot;</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s2">&quot;United_States&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>-3.61328125e-02<span class="w"> </span>-4.83398438e-02<span class="w">  </span><span class="m">2</span>.35351562e-01<span class="w">  </span><span class="m">1</span>.74804688e-01
+<span class="w"> </span>-1.46484375e-01<span class="w"> </span>-7.42187500e-02<span class="w"> </span>-1.01562500e-01<span class="w"> </span>-7.71484375e-02
+<span class="w">  </span><span class="m">1</span>.09375000e-01<span class="w"> </span>-5.71289062e-02<span class="w"> </span>-1.48437500e-01<span class="w"> </span>-6.00585938e-02
+<span class="w">  </span><span class="m">1</span>.74804688e-01<span class="w"> </span>-7.71484375e-02<span class="w">  </span><span class="m">2</span>.58789062e-02<span class="w"> </span>-7.66601562e-02
+<span class="w"> </span>-3.80859375e-02<span class="w">  </span><span class="m">1</span>.35742188e-01<span class="w">  </span><span class="m">3</span>.75976562e-02<span class="w"> </span>-4.19921875e-02
+<span class="w"> </span>-3.56445312e-02<span class="w">  </span><span class="m">5</span>.34667969e-02<span class="w">  </span><span class="m">3</span>.68118286e-04<span class="w"> </span>-1.66992188e-01
+<span class="w"> </span>-1.17187500e-01<span class="w">  </span><span class="m">1</span>.41601562e-01<span class="w"> </span>-1.69921875e-01<span class="w"> </span>-6.49414062e-02
+<span class="w"> </span>-1.66992188e-01<span class="w">  </span><span class="m">1</span>.00585938e-01<span class="w">  </span><span class="m">1</span>.15722656e-01<span class="w"> </span>-2.18750000e-01
+<span class="w"> </span>-9.86328125e-02<span class="w"> </span>-2.56347656e-02<span class="w">  </span><span class="m">1</span>.23046875e-01<span class="w"> </span>-3.54003906e-02
+<span class="w"> </span>-1.58203125e-01<span class="w"> </span>-1.60156250e-01<span class="w">  </span><span class="m">2</span>.94189453e-02<span class="w">  </span><span class="m">8</span>.15429688e-02
+<span class="w">  </span><span class="m">6</span>.88476562e-02<span class="w">  </span><span class="m">1</span>.87500000e-01<span class="w">  </span><span class="m">6</span>.49414062e-02<span class="w">  </span><span class="m">1</span>.15234375e-01
+<span class="w"> </span>-2.27050781e-02<span class="w">  </span><span class="m">3</span>.32031250e-01<span class="w"> </span>-3.27148438e-02<span class="w">  </span><span class="m">1</span>.77734375e-01
+<span class="w"> </span>-2.08007812e-01<span class="w">  </span><span class="m">4</span>.54101562e-02<span class="w"> </span>-1.23901367e-02<span class="w">  </span><span class="m">1</span>.19628906e-01
+<span class="w">  </span><span class="m">7</span>.44628906e-03<span class="w"> </span>-9.03320312e-03<span class="w">  </span><span class="m">1</span>.14257812e-01<span class="w">  </span><span class="m">1</span>.69921875e-01
+<span class="w"> </span>-2.38281250e-01<span class="w"> </span>-2.79541016e-02<span class="w"> </span>-1.21093750e-01<span class="w">  </span><span class="m">2</span>.47802734e-02
+<span class="w">  </span><span class="m">7</span>.71484375e-02<span class="w"> </span>-2.81982422e-02<span class="w"> </span>-4.71191406e-02<span class="w">  </span><span class="m">1</span>.78222656e-02
+<span class="w"> </span>-1.23046875e-01<span class="w"> </span>-5.32226562e-02<span class="w">  </span><span class="m">2</span>.68554688e-02<span class="w"> </span>-3.11279297e-02
+<span class="w"> </span>-5.59082031e-02<span class="w"> </span>-5.00488281e-02<span class="w"> </span>-3.73535156e-02<span class="w">  </span><span class="m">1</span>.25976562e-01
+<span class="w">  </span><span class="m">5</span>.61523438e-02<span class="w">  </span><span class="m">1</span>.51367188e-01<span class="w">  </span><span class="m">4</span>.29687500e-02<span class="w"> </span>-2.08007812e-01
+<span class="w"> </span>-4.78515625e-02<span class="w">  </span><span class="m">2</span>.78320312e-02<span class="w">  </span><span class="m">1</span>.81640625e-01<span class="w">  </span><span class="m">2</span>.20703125e-01
+<span class="w"> </span>-3.61328125e-02<span class="w"> </span>-8.39843750e-02<span class="w"> </span>-3.69548798e-05<span class="w"> </span>-9.52148438e-02
+<span class="w"> </span>-1.25000000e-01<span class="w"> </span>-1.95312500e-01<span class="w"> </span>-1.50390625e-01<span class="w"> </span>-4.15039062e-02
+<span class="w">  </span><span class="m">1</span>.31835938e-01<span class="w">  </span><span class="m">1</span>.17675781e-01<span class="w">  </span><span class="m">1</span>.91650391e-02<span class="w">  </span><span class="m">5</span>.51757812e-02
+<span class="w"> </span>-9.42382812e-02<span class="w"> </span>-1.08886719e-01<span class="w">  </span><span class="m">7</span>.32421875e-02<span class="w"> </span>-1.15234375e-01
+<span class="w">  </span><span class="m">8</span>.93554688e-02<span class="w"> </span>-1.40625000e-01<span class="w">  </span><span class="m">1</span>.45507812e-01<span class="w">  </span><span class="m">4</span>.49218750e-02
+<span class="w"> </span>-1.10473633e-02<span class="w"> </span>-1.62353516e-02<span class="w">  </span><span class="m">4</span>.05883789e-03<span class="w">  </span><span class="m">3</span>.75976562e-02
+<span class="w"> </span>-6.98242188e-02<span class="w"> </span>-5.46875000e-02<span class="w">  </span><span class="m">2</span>.17285156e-02<span class="w"> </span>-9.47265625e-02
+<span class="w">  </span><span class="m">4</span>.24804688e-02<span class="w">  </span><span class="m">1</span>.81884766e-02<span class="w"> </span>-1.73339844e-02<span class="w">  </span><span class="m">4</span>.63867188e-02
+<span class="w"> </span>-1.42578125e-01<span class="w">  </span><span class="m">1</span>.99218750e-01<span class="w">  </span><span class="m">1</span>.10839844e-01<span class="w">  </span><span class="m">2</span>.58789062e-02
+<span class="w"> </span>-7.08007812e-02<span class="w"> </span>-5.54199219e-02<span class="w">  </span><span class="m">3</span>.45703125e-01<span class="w">  </span><span class="m">1</span>.61132812e-01
+<span class="w"> </span>-2.44140625e-01<span class="w"> </span>-2.59765625e-01<span class="w"> </span>-9.71679688e-02<span class="w">  </span><span class="m">8</span>.00781250e-02
+<span class="w"> </span>-8.78906250e-02<span class="w"> </span>-7.22656250e-02<span class="w">  </span><span class="m">1</span>.42578125e-01<span class="w"> </span>-8.54492188e-02
+<span class="w"> </span>-3.18359375e-01<span class="w">  </span><span class="m">8</span>.30078125e-02<span class="w">  </span><span class="m">6</span>.34765625e-02<span class="w">  </span><span class="m">1</span>.64062500e-01
+<span class="w"> </span>-1.92382812e-01<span class="w"> </span>-1.17675781e-01<span class="w"> </span>-5.41992188e-02<span class="w"> </span>-1.56250000e-01
+<span class="w"> </span>-1.21582031e-01<span class="w"> </span>-4.95605469e-02<span class="w">  </span><span class="m">1</span>.20117188e-01<span class="w"> </span>-3.83300781e-02
+<span class="w">  </span><span class="m">5</span>.51757812e-02<span class="w"> </span>-8.97216797e-03<span class="w">  </span><span class="m">4</span>.32128906e-02<span class="w">  </span><span class="m">6</span>.93359375e-02
+<span class="w">  </span><span class="m">8</span>.93554688e-02<span class="w">  </span><span class="m">2</span>.53906250e-01<span class="w">  </span><span class="m">1</span>.65039062e-01<span class="w">  </span><span class="m">1</span>.64062500e-01
+<span class="w"> </span>-1.41601562e-01<span class="w">  </span><span class="m">4</span>.58984375e-02<span class="w">  </span><span class="m">1</span>.97265625e-01<span class="w"> </span>-8.98437500e-02
+<span class="w">  </span><span class="m">3</span>.90625000e-02<span class="w"> </span>-1.51367188e-01<span class="w"> </span>-8.60595703e-03<span class="w"> </span>-1.17675781e-01
+<span class="w"> </span>-1.97265625e-01<span class="w"> </span>-1.12792969e-01<span class="w">  </span><span class="m">1</span>.29882812e-01<span class="w">  </span><span class="m">1</span>.96289062e-01
+<span class="w">  </span><span class="m">1</span>.56402588e-03<span class="w">  </span><span class="m">3</span>.93066406e-02<span class="w">  </span><span class="m">2</span>.17773438e-01<span class="w"> </span>-1.43554688e-01
+<span class="w">  </span><span class="m">6</span>.03027344e-02<span class="w"> </span>-1.35742188e-01<span class="w">  </span><span class="m">1</span>.16210938e-01<span class="w"> </span>-1.59912109e-02
+<span class="w">  </span><span class="m">2</span>.79296875e-01<span class="w">  </span><span class="m">1</span>.46484375e-01<span class="w"> </span>-1.19628906e-01<span class="w">  </span><span class="m">1</span>.76757812e-01
+<span class="w">  </span><span class="m">1</span>.28906250e-01<span class="w"> </span>-1.49414062e-01<span class="w">  </span><span class="m">6</span>.93359375e-02<span class="w"> </span>-1.72851562e-01
+<span class="w">  </span><span class="m">9</span>.22851562e-02<span class="w">  </span><span class="m">1</span>.33056641e-02<span class="w"> </span>-2.00195312e-01<span class="w"> </span>-9.76562500e-02
+<span class="w"> </span>-1.65039062e-01<span class="w"> </span>-2.46093750e-01<span class="w"> </span>-2.35595703e-02<span class="w"> </span>-2.11914062e-01
+<span class="w">  </span><span class="m">1</span>.84570312e-01<span class="w"> </span>-1.85546875e-02<span class="w">  </span><span class="m">2</span>.16796875e-01<span class="w">  </span><span class="m">5</span>.05371094e-02
+<span class="w">  </span><span class="m">2</span>.02636719e-02<span class="w">  </span><span class="m">4</span>.25781250e-01<span class="w">  </span><span class="m">1</span>.28906250e-01<span class="w"> </span>-2.77099609e-02
+<span class="w">  </span><span class="m">1</span>.29882812e-01<span class="w"> </span>-1.15722656e-01<span class="w"> </span>-2.05078125e-02<span class="w">  </span><span class="m">1</span>.49414062e-01
+<span class="w">  </span><span class="m">7</span>.81250000e-03<span class="w"> </span>-2.05078125e-01<span class="w"> </span>-8.05664062e-02<span class="w"> </span>-2.67578125e-01
+<span class="w"> </span>-2.29492188e-02<span class="w"> </span>-8.20312500e-02<span class="w">  </span><span class="m">8</span>.64257812e-02<span class="w">  </span><span class="m">7</span>.61718750e-02
+<span class="w"> </span>-3.66210938e-02<span class="w">  </span><span class="m">5</span>.22460938e-02<span class="w"> </span>-1.22070312e-01<span class="w"> </span>-1.44042969e-02
+<span class="w"> </span>-2.69531250e-01<span class="w">  </span><span class="m">8</span>.44726562e-02<span class="w"> </span>-2.52685547e-02<span class="w"> </span>-2.96630859e-02
+<span class="w"> </span>-1.68945312e-01<span class="w">  </span><span class="m">1</span>.93359375e-01<span class="w"> </span>-1.08398438e-01<span class="w">  </span><span class="m">1</span>.94091797e-02
+<span class="w"> </span>-1.80664062e-01<span class="w">  </span><span class="m">1</span>.93359375e-01<span class="w"> </span>-7.08007812e-02<span class="w">  </span><span class="m">5</span>.85937500e-02
+<span class="w"> </span>-1.01562500e-01<span class="w"> </span>-1.31835938e-01<span class="w">  </span><span class="m">7</span>.51953125e-02<span class="w"> </span>-7.66601562e-02
+<span class="w">  </span><span class="m">3</span>.37219238e-03<span class="w"> </span>-8.59375000e-02<span class="w">  </span><span class="m">1</span>.25000000e-01<span class="w">  </span><span class="m">2</span>.92968750e-02
+<span class="w">  </span><span class="m">1</span>.70898438e-01<span class="w"> </span>-9.37500000e-02<span class="w"> </span>-1.09375000e-01<span class="w"> </span>-2.50244141e-02
+<span class="w">  </span><span class="m">2</span>.11914062e-01<span class="w"> </span>-4.44335938e-02<span class="w">  </span><span class="m">6</span>.12792969e-02<span class="w">  </span><span class="m">2</span>.62451172e-02
+<span class="w"> </span>-1.77734375e-01<span class="w">  </span><span class="m">1</span>.23046875e-01<span class="w"> </span>-7.42187500e-02<span class="w"> </span>-1.67968750e-01
+<span class="w"> </span>-1.08886719e-01<span class="w"> </span>-9.04083252e-04<span class="w"> </span>-7.37304688e-02<span class="w">  </span><span class="m">5</span>.49316406e-02
+<span class="w">  </span><span class="m">6</span>.03027344e-02<span class="w">  </span><span class="m">8</span>.39843750e-02<span class="w">  </span><span class="m">9</span>.17968750e-02<span class="w"> </span>-1.32812500e-01
+<span class="w">  </span><span class="m">1</span>.22070312e-01<span class="w"> </span>-8.78906250e-03<span class="w">  </span><span class="m">1</span>.19140625e-01<span class="w"> </span>-1.94335938e-01
+<span class="w"> </span>-6.64062500e-02<span class="w"> </span>-2.07031250e-01<span class="w">  </span><span class="m">7</span>.37304688e-02<span class="w">  </span><span class="m">8</span>.93554688e-02
+<span class="w">  </span><span class="m">1</span>.81884766e-02<span class="w"> </span>-1.20605469e-01<span class="w"> </span>-2.61230469e-02<span class="w">  </span><span class="m">2</span>.67333984e-02
+<span class="w">  </span><span class="m">7</span>.76367188e-02<span class="w"> </span>-8.30078125e-02<span class="w">  </span><span class="m">6</span>.78710938e-02<span class="w"> </span>-3.54003906e-02
+<span class="w">  </span><span class="m">3</span>.10546875e-01<span class="w"> </span>-2.42919922e-02<span class="w"> </span>-1.41601562e-01<span class="w"> </span>-2.08007812e-01
+<span class="w"> </span>-4.57763672e-03<span class="w"> </span>-6.54296875e-02<span class="w"> </span>-4.95605469e-02<span class="w">  </span><span class="m">2</span>.22656250e-01
+<span class="w">  </span><span class="m">1</span>.53320312e-01<span class="w"> </span>-1.38671875e-01<span class="w"> </span>-5.24902344e-02<span class="w">  </span><span class="m">4</span>.24804688e-02
+<span class="w"> </span>-2.38281250e-01<span class="w">  </span><span class="m">1</span>.56250000e-01<span class="w">  </span><span class="m">5</span>.83648682e-04<span class="w"> </span>-1.20605469e-01
+<span class="w"> </span>-9.22851562e-02<span class="w"> </span>-4.44335938e-02<span class="w">  </span><span class="m">3</span>.61328125e-02<span class="w"> </span>-1.86767578e-02
+<span class="w"> </span>-8.25195312e-02<span class="w"> </span>-8.25195312e-02<span class="w"> </span>-4.05273438e-02<span class="w">  </span><span class="m">1</span>.19018555e-02
+<span class="w">  </span><span class="m">1</span>.69921875e-01<span class="w"> </span>-2.80761719e-02<span class="w">  </span><span class="m">3</span>.03649902e-03<span class="w">  </span><span class="m">9</span>.32617188e-02
+<span class="w"> </span>-8.49609375e-02<span class="w">  </span><span class="m">1</span>.57470703e-02<span class="w">  </span><span class="m">7</span>.03125000e-02<span class="w">  </span><span class="m">1</span>.62353516e-02
+<span class="w"> </span>-2.27050781e-02<span class="w">  </span><span class="m">3</span>.51562500e-02<span class="w">  </span><span class="m">2</span>.47070312e-01<span class="w"> </span>-2.67333984e-02<span class="o">]</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># !pip install gdown</span>
+<span class="c1"># !gdown https://drive.google.com/uc?id=0B7XkCwpI5KDYNlNUTTlSS21pQmM</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># !pip install gensim</span>
+<span class="c1"># !pip install google</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id3">
+<h2>51. 単語の類似度<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>&quot;United States&quot;と&quot;U.S.&quot;のコサイン類似度を計算せよ.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gensim.models</span> <span class="kn">import</span> <span class="n">KeyedVectors</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">cos_sim</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v2</span><span class="p">))</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">KeyedVectors</span><span class="o">.</span><span class="n">load_word2vec_format</span><span class="p">(</span><span class="s2">&quot;GoogleNews-vectors-negative300.bin.gz&quot;</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">vec1</span> <span class="o">=</span> <span class="n">model</span><span class="p">[</span><span class="s2">&quot;United_States&quot;</span><span class="p">]</span>
+<span class="n">vec2</span> <span class="o">=</span> <span class="n">model</span><span class="p">[</span><span class="s2">&quot;U.S.&quot;</span><span class="p">]</span>
+<span class="n">cs</span> <span class="o">=</span> <span class="n">cos_sim</span><span class="p">(</span><span class="n">vec1</span><span class="p">,</span> <span class="n">vec2</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cosine similarity: </span><span class="si">{</span><span class="n">cs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Cosine<span class="w"> </span>similarity:<span class="w"> </span><span class="m">0</span>.7310774922370911
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h2>52. 類似度の高い単語10件<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>&quot;United States&quot;とコサイン類似度が高い10語と, その類似度を出力せよ.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gensim.models</span> <span class="kn">import</span> <span class="n">KeyedVectors</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">cos_sim</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v2</span><span class="p">))</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">KeyedVectors</span><span class="o">.</span><span class="n">load_word2vec_format</span><span class="p">(</span><span class="s2">&quot;GoogleNews-vectors-negative300.bin.gz&quot;</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">sim_list</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="s2">&quot;United_States&quot;</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sim_list</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[(</span><span class="s1">&#39;Unites_States&#39;</span>,<span class="w"> </span><span class="m">0</span>.7877248525619507<span class="o">)</span>,<span class="w"> </span><span class="o">(</span><span class="s1">&#39;Untied_States&#39;</span>,<span class="w"> </span><span class="m">0</span>.7541370987892151<span class="o">)</span>,<span class="w"> </span><span class="o">(</span><span class="s1">&#39;United_Sates&#39;</span>,<span class="w"> </span><span class="m">0</span>.7400724291801453<span class="o">)</span>,<span class="w"> </span><span class="o">(</span><span class="s1">&#39;U.S.&#39;</span>,<span class="w"> </span><span class="m">0</span>.7310774326324463<span class="o">)</span>,<span class="w"> </span><span class="o">(</span><span class="s1">&#39;theUnited_States&#39;</span>,<span class="w"> </span><span class="m">0</span>.6404393911361694<span class="o">)</span>,<span class="w"> </span><span class="o">(</span><span class="s1">&#39;America&#39;</span>,<span class="w"> </span><span class="m">0</span>.6178410053253174<span class="o">)</span>,<span class="w"> </span><span class="o">(</span><span class="s1">&#39;UnitedStates&#39;</span>,<span class="w"> </span><span class="m">0</span>.6167312264442444<span class="o">)</span>,<span class="w"> </span><span class="o">(</span><span class="s1">&#39;Europe&#39;</span>,<span class="w"> </span><span class="m">0</span>.6132988929748535<span class="o">)</span>,<span class="w"> </span><span class="o">(</span><span class="s1">&#39;countries&#39;</span>,<span class="w"> </span><span class="m">0</span>.6044804453849792<span class="o">)</span>,<span class="w"> </span><span class="o">(</span><span class="s1">&#39;Canada&#39;</span>,<span class="w"> </span><span class="m">0</span>.601906955242157<span class="o">)]</span>
+</pre></div>
+</div>
+</section>
+<section id="id5">
+<h2>53. 加法構成性によるアナロジー<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>&quot;Spain&quot;の単語ベクトルから&quot;Madrid&quot;のベクトルを引き, &quot;Athens&quot;のベクトルを足したベクトルを計算し, そのベクトルと類似度の高い10語とその類似度を出力せよ.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gensim.models</span> <span class="kn">import</span> <span class="n">KeyedVectors</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">cos_sim</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v2</span><span class="p">))</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">KeyedVectors</span><span class="o">.</span><span class="n">load_word2vec_format</span><span class="p">(</span><span class="s2">&quot;GoogleNews-vectors-negative300.bin.gz&quot;</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">sim_list</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="n">positive</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Spain&quot;</span><span class="p">,</span> <span class="s2">&quot;Athens&quot;</span><span class="p">],</span> <span class="n">negative</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Madrid&quot;</span><span class="p">],</span> <span class="n">topn</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sim_list</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[(</span><span class="s1">&#39;Greece&#39;</span>,<span class="w"> </span><span class="m">0</span>.6898480653762817<span class="o">)</span>,<span class="w"> </span><span class="o">(</span><span class="s1">&#39;Aristeidis_Grigoriadis&#39;</span>,<span class="w"> </span><span class="m">0</span>.560684859752655<span class="o">)</span>,<span class="w"> </span><span class="o">(</span><span class="s1">&#39;Ioannis_Drymonakos&#39;</span>,<span class="w"> </span><span class="m">0</span>.5552908778190613<span class="o">)</span>,<span class="w"> </span><span class="o">(</span><span class="s1">&#39;Greeks&#39;</span>,<span class="w"> </span><span class="m">0</span>.545068621635437<span class="o">)</span>,<span class="w"> </span><span class="o">(</span><span class="s1">&#39;Ioannis_Christou&#39;</span>,<span class="w"> </span><span class="m">0</span>.5400862097740173<span class="o">)</span>,<span class="w"> </span><span class="o">(</span><span class="s1">&#39;Hrysopiyi_Devetzi&#39;</span>,<span class="w"> </span><span class="m">0</span>.5248445272445679<span class="o">)</span>,<span class="w"> </span><span class="o">(</span><span class="s1">&#39;Heraklio&#39;</span>,<span class="w"> </span><span class="m">0</span>.5207759737968445<span class="o">)</span>,<span class="w"> </span><span class="o">(</span><span class="s1">&#39;Athens_Greece&#39;</span>,<span class="w"> </span><span class="m">0</span>.516880989074707<span class="o">)</span>,<span class="w"> </span><span class="o">(</span><span class="s1">&#39;Lithuania&#39;</span>,<span class="w"> </span><span class="m">0</span>.5166865587234497<span class="o">)</span>,<span class="w"> </span><span class="o">(</span><span class="s1">&#39;Iraklion&#39;</span>,<span class="w"> </span><span class="m">0</span>.5146791338920593<span class="o">)]</span>
+</pre></div>
+</div>
+</section>
+<section id="id6">
+<h2>54. アナロジーデータでの実験<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<p>単語アナロジーの評価データをダウンロードし, 国と首都に関する事例（<code class="docutils literal notranslate"><span class="pre">:</span> <span class="pre">capital-common-countries</span></code>セクション）に対して、vec(2列目の単語) - vec(1列目の単語) + vec(3列目の単語)を計算し, そのベクトルと類似度が最も高い単語と, その類似度を求めよ. 求めた単語と類似度は, 各事例と一緒に記録せよ.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># !wget http://download.tensorflow.org/data/questions-words.txt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gensim.models</span> <span class="kn">import</span> <span class="n">KeyedVectors</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;questions-words.txt&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delim_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>  
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">KeyedVectors</span><span class="o">.</span><span class="n">load_word2vec_format</span><span class="p">(</span><span class="s2">&quot;GoogleNews-vectors-negative300.bin.gz&quot;</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Progress&quot;</span><span class="p">):</span>
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="n">positive</span><span class="o">=</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">i</span><span class="p">]],</span> <span class="n">negative</span><span class="o">=</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]],</span> <span class="n">topn</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">df</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2"> =&gt; </span><span class="si">{</span><span class="n">sim</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> (Similarity: </span><span class="si">{</span><span class="n">sim</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span>
+    
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;record.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;record.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>capital-common-countries<span class="w"> </span>Athens<span class="w"> </span>Greece<span class="w"> </span>Baghdad<span class="w"> </span>Iraq<span class="w"> </span>Iraqi<span class="w"> </span><span class="m">0</span>.635187
+capital-common-countries<span class="w"> </span>Athens<span class="w"> </span>Greece<span class="w"> </span>Bangkok<span class="w"> </span>Thailand<span class="w"> </span>Thailand<span class="w"> </span><span class="m">0</span>.713767
+capital-common-countries<span class="w"> </span>Athens<span class="w"> </span>Greece<span class="w"> </span>Beijing<span class="w"> </span>China<span class="w"> </span>China<span class="w"> </span><span class="m">0</span>.723578
+capital-common-countries<span class="w"> </span>Athens<span class="w"> </span>Greece<span class="w"> </span>Berlin<span class="w"> </span>Germany<span class="w"> </span>Germany<span class="w"> </span><span class="m">0</span>.673462
+capital-common-countries<span class="w"> </span>Athens<span class="w"> </span>Greece<span class="w"> </span>Bern<span class="w"> </span>Switzerland<span class="w"> </span>Switzerland<span class="w"> </span><span class="m">0</span>.491975
+capital-common-countries<span class="w"> </span>Athens<span class="w"> </span>Greece<span class="w"> </span>Cairo<span class="w"> </span>Egypt<span class="w"> </span>Egypt<span class="w"> </span><span class="m">0</span>.752781
+capital-common-countries<span class="w"> </span>Athens<span class="w"> </span>Greece<span class="w"> </span>Canberra<span class="w"> </span>Australia<span class="w"> </span>Australia<span class="w"> </span><span class="m">0</span>.583733
+capital-common-countries<span class="w"> </span>Athens<span class="w"> </span>Greece<span class="w"> </span>Hanoi<span class="w"> </span>Vietnam<span class="w"> </span>Viet_Nam<span class="w"> </span><span class="m">0</span>.627634
+capital-common-countries<span class="w"> </span>Athens<span class="w"> </span>Greece<span class="w"> </span>Havana<span class="w"> </span>Cuba<span class="w"> </span>Cuba<span class="w"> </span><span class="m">0</span>.646099
+capital-common-countries<span class="w"> </span>Athens<span class="w"> </span>Greece<span class="w"> </span>Helsinki<span class="w"> </span>Finland<span class="w"> </span>Finland<span class="w"> </span><span class="m">0</span>.689998
+</pre></div>
+</div>
+</section>
+<section id="id7">
+<h2>55. アナロジータスクでの正解率<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<p>54の実行結果を用い, 意味的アナロジー (semantic analogy) と文法的アナロジー (syntactic analogy) の正解率を測定せよ.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gensim.models</span> <span class="kn">import</span> <span class="n">KeyedVectors</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="s2">&quot;record.txt&quot;</span><span class="p">,</span> <span class="n">delim_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="s2">&quot;wordA1&quot;</span><span class="p">,</span> <span class="s2">&quot;wordA2&quot;</span><span class="p">,</span> <span class="s2">&quot;wordB1&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="s2">&quot;pred&quot;</span><span class="p">,</span> <span class="s2">&quot;sim&quot;</span><span class="p">])</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;correct&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;true&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pred&quot;</span><span class="p">]</span>
+
+<span class="n">semantic_categories</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;capital-common-countries&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;capital-world&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;currency&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;city-in-state&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;family&quot;</span>
+<span class="p">]</span>
+
+<span class="n">syntactic_categories</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;gram1-adjective-to-adverb&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;gram2-opposite&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;gram3-comparative&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;gram4-superlative&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;gram5-present-participle&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;gram6-nationality-adjective&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;gram7-past-tense&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;gram8-plural&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;gram9-plural-verbs&quot;</span>
+<span class="p">]</span>
+
+<span class="n">semantic_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">semantic_categories</span><span class="p">)]</span>
+<span class="n">semantic_accuracy</span> <span class="o">=</span> <span class="n">semantic_df</span><span class="p">[</span><span class="s2">&quot;correct&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">semantic_df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+<span class="n">semantic_correct</span> <span class="o">=</span> <span class="n">semantic_df</span><span class="p">[</span><span class="s2">&quot;correct&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">semantic_total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">semantic_df</span><span class="p">)</span>
+
+<span class="n">syntactic_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">syntactic_categories</span><span class="p">)]</span>
+<span class="n">syntactic_accuracy</span> <span class="o">=</span> <span class="n">syntactic_df</span><span class="p">[</span><span class="s2">&quot;correct&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">syntactic_df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+<span class="n">syntactic_correct</span> <span class="o">=</span> <span class="n">syntactic_df</span><span class="p">[</span><span class="s2">&quot;correct&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">syntactic_total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">syntactic_df</span><span class="p">)</span>
+
+<span class="n">overall_accuracy</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;correct&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">overall_correct</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;correct&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">overall_total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Semantic Analogy Accuracy: </span><span class="si">{</span><span class="n">semantic_accuracy</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">semantic_correct</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">semantic_total</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Syntactic Analogy Accuracy: </span><span class="si">{</span><span class="n">syntactic_accuracy</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">syntactic_correct</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">syntactic_total</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Overall Accuracy: </span><span class="si">{</span><span class="n">overall_accuracy</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">overall_correct</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">overall_total</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Accuracy by category:&quot;</span><span class="p">)</span>
+<span class="n">category_accuracy</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">)[</span><span class="s2">&quot;correct&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">])</span>
+<span class="n">category_accuracy</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Accuracy&quot;</span><span class="p">,</span> <span class="s2">&quot;Correct&quot;</span><span class="p">,</span> <span class="s2">&quot;Total&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">category_accuracy</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Semantic<span class="w"> </span>Analogy<span class="w"> </span>Accuracy:<span class="w"> </span><span class="m">0</span>.7359<span class="w"> </span><span class="o">(</span><span class="m">14382</span>/19544<span class="o">)</span>
+Syntactic<span class="w"> </span>Analogy<span class="w"> </span>Accuracy:<span class="w"> </span><span class="m">0</span>.0000<span class="w"> </span><span class="o">(</span><span class="m">0</span>/0<span class="o">)</span>
+Overall<span class="w"> </span>Accuracy:<span class="w"> </span><span class="m">0</span>.7359<span class="w"> </span><span class="o">(</span><span class="m">14382</span>/19544<span class="o">)</span>
+
+Accuracy<span class="w"> </span>by<span class="w"> </span>category:
+<span class="w">                          </span>Accuracy<span class="w">  </span>Correct<span class="w">  </span>Total
+category
+capital-common-countries<span class="w">  </span><span class="m">0</span>.735878<span class="w">    </span><span class="m">14382</span><span class="w">  </span><span class="m">19544</span>
+</pre></div>
+</div>
+</section>
+<section id="wordsimilarity-353">
+<h2>56. WordSimilarity-353での評価<a class="headerlink" href="#wordsimilarity-353" title="Link to this heading">#</a></h2>
+<p><a class="reference external" href="http://www.gabrilovich.com/resources/data/wordsim353/wordsim353.html">The WordSimilarity-353 Test Collection</a>の評価データをダウンロードし, 単語ベクトルにより計算される類似度のランキングと, 人間の類似度判定のランキングの間のスピアマン相関係数を計算せよ.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># !wget https://www.gabrilovich.com/resources/data/wordsim353/wordsim353.zip</span>
+<span class="c1"># !unzip wordsim353.zip</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gensim.models</span> <span class="kn">import</span> <span class="n">KeyedVectors</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="k">def</span> <span class="nf">cos_sim</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v2</span><span class="p">))</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;combined.csv&quot;</span><span class="p">)</span>
+<span class="n">words1</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Word 1&quot;</span><span class="p">]</span>
+<span class="n">words2</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Word 2&quot;</span><span class="p">]</span>
+<span class="n">human_scores</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Human (mean)&quot;</span><span class="p">]</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">KeyedVectors</span><span class="o">.</span><span class="n">load_word2vec_format</span><span class="p">(</span><span class="s2">&quot;GoogleNews-vectors-negative300.bin.gz&quot;</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">vec_scores</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">word1</span><span class="p">,</span> <span class="n">word2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">words1</span><span class="p">,</span> <span class="n">words2</span><span class="p">):</span>
+    <span class="n">vec1</span> <span class="o">=</span> <span class="n">model</span><span class="p">[</span><span class="n">word1</span><span class="p">]</span>
+    <span class="n">vec2</span> <span class="o">=</span> <span class="n">model</span><span class="p">[</span><span class="n">word2</span><span class="p">]</span>
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">cos_sim</span><span class="p">(</span><span class="n">vec1</span><span class="p">,</span> <span class="n">vec2</span><span class="p">)</span>
+    <span class="n">vec_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span>
+    
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;cos_sim&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec_scores</span>
+    
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Corr: </span><span class="si">{</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Human (mean)&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;cos_sim&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;spearman&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Corr:<span class="w">               </span>Human<span class="w"> </span><span class="o">(</span>mean<span class="o">)</span><span class="w">   </span>cos_sim
+Human<span class="w"> </span><span class="o">(</span>mean<span class="o">)</span><span class="w">      </span><span class="m">1</span>.000000<span class="w">  </span><span class="m">0</span>.700017
+cos_sim<span class="w">           </span><span class="m">0</span>.700017<span class="w">  </span><span class="m">1</span>.000000
+</pre></div>
+</div>
+</section>
+<section id="k-means">
+<h2>57. k-meansクラスタリング<a class="headerlink" href="#k-means" title="Link to this heading">#</a></h2>
+<p>国名に関する単語ベクトルを抽出し, k-meansクラスタリングをクラスタ数k=5として実行せよ.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gensim.models</span> <span class="kn">import</span> <span class="n">KeyedVectors</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">KeyedVectors</span><span class="o">.</span><span class="n">load_word2vec_format</span><span class="p">(</span><span class="s2">&quot;GoogleNews-vectors-negative300.bin.gz&quot;</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;questions-words.txt&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;col1&quot;</span><span class="p">,</span> <span class="s2">&quot;col2&quot;</span><span class="p">,</span> <span class="s2">&quot;col3&quot;</span><span class="p">,</span> <span class="s2">&quot;col4&quot;</span><span class="p">],</span> <span class="n">delim_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+
+<span class="n">countries</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;col4&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+
+<span class="n">vec</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">country</span> <span class="ow">in</span> <span class="n">countries</span><span class="p">:</span>
+    <span class="n">vec</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="n">country</span><span class="p">])</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
+<span class="n">km</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">y_km</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">X_pca</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">scatter</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_pca</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_pca</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">y_km</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;tab10&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;KMeans Clustering of Countries (Word2Vec)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;PCA Component 1&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;PCA Component 2&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">country</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">countries</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">X_pca</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_pca</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">country</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;k.png&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><img alt="k" src="_images/k.png" /></p>
+</section>
+<section id="ward">
+<h2>58. Ward法によるクラスタリング<a class="headerlink" href="#ward" title="Link to this heading">#</a></h2>
+<p>国名に関する単語ベクトルに対し, Ward法による階層型クラスタリングを実行せよ.さらに, クラスタリング結果をデンドログラムとして可視化せよ.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gensim.models</span> <span class="kn">import</span> <span class="n">KeyedVectors</span>
+<span class="kn">from</span> <span class="nn">scipy.cluster.hierarchy</span> <span class="kn">import</span> <span class="n">dendrogram</span><span class="p">,</span> <span class="n">linkage</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">KeyedVectors</span><span class="o">.</span><span class="n">load_word2vec_format</span><span class="p">(</span><span class="s2">&quot;GoogleNews-vectors-negative300.bin.gz&quot;</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;questions-words.txt&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;col1&quot;</span><span class="p">,</span> <span class="s2">&quot;col2&quot;</span><span class="p">,</span> <span class="s2">&quot;col3&quot;</span><span class="p">,</span> <span class="s2">&quot;col4&quot;</span><span class="p">],</span> <span class="n">delim_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+
+<span class="n">countries</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;col4&quot;</span><span class="p">]</span>
+
+<span class="n">vec</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">country</span> <span class="ow">in</span> <span class="n">countries</span><span class="p">:</span>
+    <span class="n">vec</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="n">country</span><span class="p">])</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
+<span class="n">linkage_result</span> <span class="o">=</span> <span class="n">linkage</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;ward&#39;</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;euclidean&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">dendrogram</span><span class="p">(</span><span class="n">linkage_result</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">countries</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;ward.png&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><img alt="ward" src="_images/ward.png" /></p>
+</section>
+<section id="t-sne">
+<h2>59. t-SNEによる可視化<a class="headerlink" href="#t-sne" title="Link to this heading">#</a></h2>
+<p>ベクトル空間上の国名に関する単語ベクトルをt-SNEで可視化せよ.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gensim.models</span> <span class="kn">import</span> <span class="n">KeyedVectors</span>
+<span class="kn">from</span> <span class="nn">sklearn.manifold</span> <span class="kn">import</span> <span class="n">TSNE</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">KeyedVectors</span><span class="o">.</span><span class="n">load_word2vec_format</span><span class="p">(</span><span class="s2">&quot;GoogleNews-vectors-negative300.bin.gz&quot;</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;questions-words.txt&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;col1&quot;</span><span class="p">,</span> <span class="s2">&quot;col2&quot;</span><span class="p">,</span> <span class="s2">&quot;col3&quot;</span><span class="p">,</span> <span class="s2">&quot;col4&quot;</span><span class="p">],</span> <span class="n">delim_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+
+<span class="n">countries</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;col4&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+
+<span class="n">vec</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">country</span> <span class="ow">in</span> <span class="n">countries</span><span class="p">:</span>
+    <span class="n">vec</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="n">country</span><span class="p">])</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
+<span class="n">tsne</span> <span class="o">=</span> <span class="n">TSNE</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1234</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;cosine&#39;</span><span class="p">)</span>
+<span class="n">embs</span> <span class="o">=</span> <span class="n">tsne</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">embs</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">embs</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">country</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">countries</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">embs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">embs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">country</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;t-SNE of Country Word Vectors&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;tsne.png&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><img alt="tsne" src="_images/tsne.png" /></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">50. 単語ベクトルの読み込みと表示</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">51. 単語の類似度</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">52. 類似度の高い単語10件</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">53. 加法構成性によるアナロジー</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">54. アナロジーデータでの実験</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">55. アナロジータスクでの正解率</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wordsimilarity-353">56. WordSimilarity-353での評価</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#k-means">57. k-meansクラスタリング</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ward">58. Ward法によるクラスタリング</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#t-sne">59. t-SNEによる可視化</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Eito YONEYAMA
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+<script src="https://utteranc.es/client.js"
+repo="rice8y/nlp100"
+issue-term="title"
+label="💬"
+theme="github-light"
+crossorigin="anonymous"
+async>
+</script>
+</div>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
