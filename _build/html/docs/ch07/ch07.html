@@ -396,7 +396,9 @@
 <button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
 </button>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -412,6 +414,23 @@
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">60. データの入手・整形</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">61. 特徴ベクトル</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">62. 学習</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">63. 予測</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">64. 条件付き確率</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">65. テキストのポジネガの予測</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">66. 混同行列の作成</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">67. 精度の計測</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">68. 特徴量の重みの確認</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">69. 正則化パラメータの変更</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -423,10 +442,497 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
 <h1>第7章: 機械学習<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Upcoming...</p>
+<p>本章では, <a class="reference external" href="https://nlp.stanford.edu/sentiment/">Stanford Sentiment Treebank (SST)</a> データセットを用い, 評判分析器 (ポジネガ分類器) を構築する. ここでは処理を簡略化するため, <a class="reference external" href="https://gluebenchmark.com/">General Language Understanding Evaluation (GLUE)</a> ベンチマークで配布されているSSTデータセットを用いる.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>本章は, <code class="docutils literal notranslate"><span class="pre">code-cell</span></code> ではなく, Markdown のコードブロック内にコードを記述しているため, Google Colab上で直接実行できません.</p>
 </div>
+<section id="id2">
+<h2>60. データの入手・整形<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>GLUEのウェブサイトから<a class="reference external" href="https://dl.fbaipublicfiles.com/glue/data/SST-2.zip">SST-2</a>データセットを取得せよ。学習データ（<code class="docutils literal notranslate"><span class="pre">train.tsv</span></code>）と検証データ（<code class="docutils literal notranslate"><span class="pre">dev.tsv</span></code>）のぞれぞれについて、ポジティブ (1) とネガティブ (0) の事例数をカウントせよ.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># !wget https://dl.fbaipublicfiles.com/glue/data/SST-2.zip</span>
+<span class="c1"># !unzip SST-2.zip</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">train_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="s2">&quot;SST-2/train.tsv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">dev_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="s2">&quot;SST-2/dev.tsv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;# train.tsv&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Positive: </span><span class="si">{</span><span class="p">(</span><span class="n">train_df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Negative: </span><span class="si">{</span><span class="p">(</span><span class="n">train_df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;# dev.tsv&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Positive: </span><span class="si">{</span><span class="p">(</span><span class="n">dev_df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Negative: </span><span class="si">{</span><span class="p">(</span><span class="n">dev_df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># train.tsv</span>
+Positive:<span class="w"> </span><span class="m">37569</span>
+Negative:<span class="w"> </span><span class="m">29780</span>
+<span class="c1"># dev.tsv</span>
+Positive:<span class="w"> </span><span class="m">444</span>
+Negative:<span class="w"> </span><span class="m">428</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h2>61. 特徴ベクトル<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p>Bag of Words (BoW) に基づき, 学習データ (train.tsv) および検証データ (dev.tsv) のテキストを特徴ベクトルに変換したい. ここで, ある事例のテキストの特徴ベクトルは, テキスト中に含まれる単語 (スペース区切りのトークン) の出現頻度で構成する. 例えば, &quot;too loud , too goofy&quot;というテキストに対応する特徴ベクトルは, 以下のような辞書オブジェクトで表現される.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;too&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;loud&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;goofy&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>各事例はテキスト, 特徴ベクトル, ラベルを格納した辞書オブジェクトでまとめておく. 例えば, 先ほどの&quot;too loud , too goofy&quot;に対してラベル&quot;0&quot; (ネガティブ) が付与された事例は, 以下のオブジェクトで表現される.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;too loud , too goofy&#39;</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;feature&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;too&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;loud&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;goofy&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}}</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+
+<span class="n">train_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="s2">&quot;SST-2/train.tsv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">dev_df</span>   <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="s2">&quot;SST-2/dev.tsv&quot;</span><span class="p">,</span>   <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">make_bow_dict_list</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">text_col</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">,</span> <span class="n">label_col</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">text</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">text_col</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="n">label_col</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">==</span><span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>          
+        <span class="n">feat</span>   <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">Counter</span><span class="p">(</span><span class="n">tokens</span><span class="p">))</span>  
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;text&quot;</span><span class="p">:</span>    <span class="n">text</span><span class="p">,</span>
+            <span class="s2">&quot;label&quot;</span><span class="p">:</span>   <span class="nb">str</span><span class="p">(</span><span class="n">label</span><span class="p">),</span>    
+            <span class="s2">&quot;feature&quot;</span><span class="p">:</span> <span class="n">feat</span>
+        <span class="p">})</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="n">train_list</span> <span class="o">=</span> <span class="n">make_bow_dict_list</span><span class="p">(</span><span class="n">train_df</span><span class="p">)</span>
+<span class="n">dev_list</span>   <span class="o">=</span> <span class="n">make_bow_dict_list</span><span class="p">(</span><span class="n">dev_df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">train_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">{</span><span class="s1">&#39;text&#39;</span>:<span class="w"> </span><span class="s1">&#39;hide new secretions from the parental units &#39;</span>,<span class="w"> </span><span class="s1">&#39;label&#39;</span>:<span class="w"> </span><span class="s1">&#39;0&#39;</span>,<span class="w"> </span><span class="s1">&#39;feature&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;hide&#39;</span>:<span class="w"> </span><span class="m">1</span>,<span class="w"> </span><span class="s1">&#39;new&#39;</span>:<span class="w"> </span><span class="m">1</span>,<span class="w"> </span><span class="s1">&#39;secretions&#39;</span>:<span class="w"> </span><span class="m">1</span>,<span class="w"> </span><span class="s1">&#39;from&#39;</span>:<span class="w"> </span><span class="m">1</span>,<span class="w"> </span><span class="s1">&#39;the&#39;</span>:<span class="w"> </span><span class="m">1</span>,<span class="w"> </span><span class="s1">&#39;parental&#39;</span>:<span class="w"> </span><span class="m">1</span>,<span class="w"> </span><span class="s1">&#39;units&#39;</span>:<span class="w"> </span><span class="m">1</span><span class="o">}}</span>
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h2>62. 学習<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>61で構築した学習データの特徴ベクトルを用いて, ロジスティック回帰モデルを学習せよ.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+<span class="kn">import</span> <span class="nn">joblib</span>
+
+<span class="k">def</span> <span class="nf">make_bow_dict_list</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">text_col</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">,</span> <span class="n">label_col</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">text</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">text_col</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="n">label_col</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>            
+        <span class="n">feat</span>   <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">Counter</span><span class="p">(</span><span class="n">tokens</span><span class="p">))</span> 
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;text&quot;</span><span class="p">:</span>    <span class="n">text</span><span class="p">,</span>
+            <span class="s2">&quot;label&quot;</span><span class="p">:</span>   <span class="nb">str</span><span class="p">(</span><span class="n">label</span><span class="p">),</span>
+            <span class="s2">&quot;feature&quot;</span><span class="p">:</span> <span class="n">feat</span>
+        <span class="p">})</span>
+    <span class="k">return</span> <span class="n">data</span>
+
+<span class="n">train_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="s2">&quot;SST-2/train.tsv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">dev_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="s2">&quot;SST-2/dev.tsv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">train_list</span> <span class="o">=</span> <span class="n">make_bow_dict_list</span><span class="p">(</span><span class="n">train_df</span><span class="p">)</span>
+<span class="n">dev_list</span>   <span class="o">=</span> <span class="n">make_bow_dict_list</span><span class="p">(</span><span class="n">dev_df</span><span class="p">)</span>
+
+<span class="n">vocab</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">train_list</span><span class="p">:</span>
+    <span class="n">vocab</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;feature&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="n">vocab_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">vocab</span><span class="p">)</span>
+<span class="n">word2idx</span> <span class="o">=</span> <span class="p">{</span><span class="n">w</span><span class="p">:</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">w</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vocab_list</span><span class="p">)}</span>
+
+<span class="k">def</span> <span class="nf">dict_list_to_matrix</span><span class="p">(</span><span class="n">dict_list</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">):</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">dict_list</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">word2idx</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dict_list</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">cnt</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;feature&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">word2idx</span><span class="p">:</span>
+                <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">[</span><span class="n">w</span><span class="p">]]</span> <span class="o">=</span> <span class="n">cnt</span>
+        <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">dict_list_to_matrix</span><span class="p">(</span><span class="n">train_list</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">)</span>
+<span class="n">X_dev</span><span class="p">,</span> <span class="n">y_dev</span>     <span class="o">=</span> <span class="n">dict_list_to_matrix</span><span class="p">(</span><span class="n">dev_list</span><span class="p">,</span>   <span class="n">word2idx</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_dev</span><span class="p">)</span>
+<span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_dev</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation Accuracy: </span><span class="si">{</span><span class="n">acc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;logistic_model.pkl&quot;</span><span class="p">)</span>
+<span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">word2idx</span><span class="p">,</span> <span class="s2">&quot;vocab.pkl&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Validation<span class="w"> </span>Accuracy:<span class="w"> </span><span class="m">0</span>.8107798165137615
+</pre></div>
+</div>
+</section>
+<section id="id5">
+<h2>63. 予測<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<p>学習したロジスティック回帰モデルを用い, 検証データの先頭の事例のラベル (ポジネガ) を予測せよ.また, 予測されたラベルが検証データで付与されていたラベルと一致しているか, 確認せよ.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">joblib</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;logistic_model.pkl&quot;</span><span class="p">)</span>
+<span class="n">word2idx</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;vocab.pkl&quot;</span><span class="p">)</span>
+
+<span class="n">dev_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="s2">&quot;SST-2/dev.tsv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">text</span> <span class="o">=</span> <span class="n">dev_df</span><span class="p">[</span><span class="s2">&quot;sentence&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">label</span> <span class="o">=</span> <span class="n">dev_df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">tokens</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+<span class="n">feature</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">Counter</span><span class="p">(</span><span class="n">tokens</span><span class="p">))</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">word2idx</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">cnt</span> <span class="ow">in</span> <span class="n">feature</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">word2idx</span><span class="p">:</span>
+        <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">[</span><span class="n">w</span><span class="p">]]</span> <span class="o">=</span> <span class="n">cnt</span>
+
+<span class="n">pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Text: </span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;True: </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pred: </span><span class="si">{</span><span class="n">pred</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Text:<span class="w"> </span>it<span class="w"> </span><span class="err">&#39;</span>s<span class="w"> </span>a<span class="w"> </span>charming<span class="w"> </span>and<span class="w"> </span>often<span class="w"> </span>affecting<span class="w"> </span>journey<span class="w"> </span>.
+True:<span class="w"> </span><span class="m">1</span>
+Pred:<span class="w"> </span><span class="m">1</span>
+</pre></div>
+</div>
+</section>
+<section id="id6">
+<h2>64. 条件付き確率<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<p>学習したロジスティック回帰モデルを用い, 検証データの先頭の事例を各ラベル (ポジネガ) に分類するときの条件付き確率を求めよ.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>import<span class="w"> </span>joblib
+import<span class="w"> </span>numpy<span class="w"> </span>as<span class="w"> </span>np
+import<span class="w"> </span>pandas<span class="w"> </span>as<span class="w"> </span>pd
+from<span class="w"> </span>collections<span class="w"> </span>import<span class="w"> </span>Counter
+
+<span class="nv">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>joblib.load<span class="o">(</span><span class="s2">&quot;logistic_model.pkl&quot;</span><span class="o">)</span>
+<span class="nv">word2idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>joblib.load<span class="o">(</span><span class="s2">&quot;vocab.pkl&quot;</span><span class="o">)</span>
+
+<span class="nv">dev_df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>pd.read_table<span class="o">(</span><span class="s2">&quot;SST-2/dev.tsv&quot;</span>,<span class="w"> </span><span class="nv">delimiter</span><span class="o">=</span><span class="s2">&quot;\t&quot;</span><span class="o">)</span>
+<span class="nv">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>dev_df<span class="o">[</span><span class="s2">&quot;sentence&quot;</span><span class="o">][</span><span class="m">0</span><span class="o">]</span>
+<span class="nv">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>dev_df<span class="o">[</span><span class="s2">&quot;label&quot;</span><span class="o">][</span><span class="m">0</span><span class="o">]</span>
+<span class="nv">tokens</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>text.split<span class="o">()</span>
+<span class="nv">feature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>dict<span class="o">(</span>Counter<span class="o">(</span>tokens<span class="o">))</span>
+
+<span class="nv">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>np.zeros<span class="o">((</span><span class="m">1</span>,<span class="w"> </span>len<span class="o">(</span>word2idx<span class="o">))</span>,<span class="w"> </span><span class="nv">dtype</span><span class="o">=</span>int<span class="o">)</span>
+<span class="k">for</span><span class="w"> </span>w,<span class="w"> </span>cnt<span class="w"> </span><span class="k">in</span><span class="w"> </span>feature.items<span class="o">()</span>:
+<span class="w">    </span><span class="k">if</span><span class="w"> </span>w<span class="w"> </span><span class="k">in</span><span class="w"> </span>word2idx:
+<span class="w">        </span>X<span class="o">[</span><span class="m">0</span>,<span class="w"> </span>word2idx<span class="o">[</span>w<span class="o">]]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>cnt
+
+<span class="nv">pred</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>model.predict<span class="o">(</span>X<span class="o">)</span>
+<span class="nv">proba</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>model.predict_proba<span class="o">(</span>X<span class="o">)</span>
+
+print<span class="o">(</span>f<span class="s2">&quot;Text: {text}&quot;</span><span class="o">)</span>
+print<span class="o">(</span>f<span class="s2">&quot;True: {label}&quot;</span><span class="o">)</span>
+print<span class="o">(</span>f<span class="s2">&quot;Pred: {pred[0]}&quot;</span><span class="o">)</span>
+print<span class="o">(</span>f<span class="s2">&quot;Class Prob: {proba[0]}&quot;</span><span class="o">)</span>
+print<span class="o">(</span>f<span class="s2">&quot;→ P(nega=0): {proba[0][0]:.4f}, P(posi=1): {proba[0][1]}&quot;</span><span class="o">)</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Text:<span class="w"> </span>it<span class="w"> </span><span class="err">&#39;</span>s<span class="w"> </span>a<span class="w"> </span>charming<span class="w"> </span>and<span class="w"> </span>often<span class="w"> </span>affecting<span class="w"> </span>journey<span class="w"> </span>.
+True:<span class="w"> </span><span class="m">1</span>
+Pred:<span class="w"> </span><span class="m">1</span>
+Class<span class="w"> </span>Prob:<span class="w"> </span><span class="o">[</span><span class="m">0</span>.0042542<span class="w"> </span><span class="m">0</span>.9957458<span class="o">]</span>
+→<span class="w"> </span>P<span class="o">(</span><span class="nv">nega</span><span class="o">=</span><span class="m">0</span><span class="o">)</span>:<span class="w"> </span><span class="m">0</span>.0043,<span class="w"> </span>P<span class="o">(</span><span class="nv">posi</span><span class="o">=</span><span class="m">1</span><span class="o">)</span>:<span class="w"> </span><span class="m">0</span>.9957457983179792
+</pre></div>
+</div>
+</section>
+<section id="id7">
+<h2>65. テキストのポジネガの予測<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<p>与えられたテキストのポジネガを予測するプログラムを実装せよ. 例えば、テキストとして&quot;the worst movie I 've ever seen&quot;を与え, ロジスティック回帰モデルの予測結果を確認せよ.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">joblib</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;logistic_model.pkl&quot;</span><span class="p">)</span>
+<span class="n">word2idx</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;vocab.pkl&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">sentimentAnalyser</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">):</span>
+    <span class="n">tokens</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">feature</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">Counter</span><span class="p">(</span><span class="n">tokens</span><span class="p">))</span>
+    
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">word2idx</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">cnt</span> <span class="ow">in</span> <span class="n">feature</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">word2idx</span><span class="p">:</span>
+            <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">[</span><span class="n">w</span><span class="p">]]</span> <span class="o">=</span> <span class="n">cnt</span>
+
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">senti</span> <span class="o">=</span> <span class="s2">&quot;Positive&quot;</span> <span class="k">if</span> <span class="n">pred</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;Negative&quot;</span>
+    
+    <span class="k">return</span> <span class="n">senti</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;the worst movie I &#39;ve ever seen&quot;</span>
+<span class="n">senti</span> <span class="o">=</span> <span class="n">sentimentAnalyser</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\&quot;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2"> is </span><span class="si">{</span><span class="n">senti</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;the worst movie I &#39;ve ever seen&quot;</span><span class="w"> </span>is<span class="w"> </span>Negative.
+</pre></div>
+</div>
+</section>
+<section id="id8">
+<h2>66. 混同行列の作成<a class="headerlink" href="#id8" title="Link to this heading">#</a></h2>
+<p>学習したロジスティック回帰モデルの検証データにおける混同行列 (confusion matrix) を求めよ.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">joblib</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">ConfusionMatrixDisplay</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;logistic_model.pkl&quot;</span><span class="p">)</span>
+<span class="n">word2idx</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;vocab.pkl&quot;</span><span class="p">)</span>
+
+<span class="n">dev_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="s2">&quot;SST-2/dev.tsv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">texts</span> <span class="o">=</span> <span class="n">dev_df</span><span class="p">[</span><span class="s2">&quot;sentence&quot;</span><span class="p">]</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">dev_df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">texts</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">word2idx</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">text</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">texts</span><span class="p">):</span>
+    <span class="n">tokens</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">feature</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">Counter</span><span class="p">(</span><span class="n">tokens</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">cnt</span> <span class="ow">in</span> <span class="n">feature</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">word2idx</span><span class="p">:</span>
+            <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">[</span><span class="n">w</span><span class="p">]]</span> <span class="o">=</span> <span class="n">cnt</span>
+
+<span class="n">y_true</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">cm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+
+<span class="n">disp</span> <span class="o">=</span> <span class="n">ConfusionMatrixDisplay</span><span class="p">(</span><span class="n">confusion_matrix</span><span class="o">=</span><span class="n">cm</span><span class="p">,</span> <span class="n">display_labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Negative&quot;</span><span class="p">,</span> <span class="s2">&quot;Positive&quot;</span><span class="p">])</span>
+<span class="n">disp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">,</span> <span class="n">values_format</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Confusion Matrix on Dev Set&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;c.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="c" src="../../_images/c.png" /></p>
+</section>
+<section id="id9">
+<h2>67. 精度の計測<a class="headerlink" href="#id9" title="Link to this heading">#</a></h2>
+<p>学習したロジスティック回帰モデルの正解率, 適合率, 再現率, F1スコアを, 学習データおよび検証データ上で計測せよ.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">joblib</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">precision_score</span><span class="p">,</span> <span class="n">recall_score</span><span class="p">,</span> <span class="n">f1_score</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;logistic_model.pkl&quot;</span><span class="p">)</span>
+<span class="n">word2idx</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;vocab.pkl&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">make_features</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">):</span>
+    <span class="n">texts</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;sentence&quot;</span><span class="p">]</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">texts</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">word2idx</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">text</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">texts</span><span class="p">):</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">feature</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">Counter</span><span class="p">(</span><span class="n">tokens</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">cnt</span> <span class="ow">in</span> <span class="n">feature</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">word2idx</span><span class="p">:</span>
+                <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">[</span><span class="n">w</span><span class="p">]]</span> <span class="o">=</span> <span class="n">cnt</span>
+    <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">labels</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+
+<span class="n">train_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="s2">&quot;SST-2/train.tsv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">dev_df</span>   <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="s2">&quot;SST-2/dev.tsv&quot;</span><span class="p">,</span>   <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">make_features</span><span class="p">(</span><span class="n">train_df</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">)</span>
+<span class="n">X_dev</span><span class="p">,</span> <span class="n">y_dev</span>     <span class="o">=</span> <span class="n">make_features</span><span class="p">(</span><span class="n">dev_df</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">)</span>
+
+<span class="n">y_train_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">y_dev_pred</span>   <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_dev</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">print_metrics</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;=== </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> ===&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Accuracy : </span><span class="si">{</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span><span class="w"> </span><span class="n">y_pred</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Precision: </span><span class="si">{</span><span class="n">precision_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span><span class="w"> </span><span class="n">y_pred</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recall   : </span><span class="si">{</span><span class="n">recall_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span><span class="w"> </span><span class="n">y_pred</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;F1 Score : </span><span class="si">{</span><span class="n">f1_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span><span class="w"> </span><span class="n">y_pred</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+<span class="n">print_metrics</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">y_train_pred</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Train&quot;</span><span class="p">)</span>
+<span class="n">print_metrics</span><span class="p">(</span><span class="n">y_dev</span><span class="p">,</span>   <span class="n">y_dev_pred</span><span class="p">,</span>   <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Dev&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">===</span><span class="w"> </span><span class="nv">Train</span><span class="w"> </span><span class="o">===</span>
+Accuracy<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.9422
+Precision:<span class="w"> </span><span class="m">0</span>.9428
+Recall<span class="w">   </span>:<span class="w"> </span><span class="m">0</span>.9544
+F1<span class="w"> </span>Score<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.9485
+
+<span class="o">===</span><span class="w"> </span><span class="nv">Dev</span><span class="w"> </span><span class="o">===</span>
+Accuracy<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8108
+Precision:<span class="w"> </span><span class="m">0</span>.8000
+Recall<span class="w">   </span>:<span class="w"> </span><span class="m">0</span>.8378
+F1<span class="w"> </span>Score<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8185
+</pre></div>
+</div>
+</section>
+<section id="id10">
+<h2>68. 特徴量の重みの確認<a class="headerlink" href="#id10" title="Link to this heading">#</a></h2>
+<p>学習したロジスティック回帰モデルの中で, 重みの高い特徴量トップ20と, 重みの低い特徴量トップ20を確認せよ.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">joblib</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;logistic_model.pkl&quot;</span><span class="p">)</span>
+<span class="n">word2idx</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;vocab.pkl&quot;</span><span class="p">)</span>
+
+<span class="n">coefs</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">idx2word</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">word2idx</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+<span class="n">top_pos_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">coefs</span><span class="p">)[</span><span class="o">-</span><span class="mi">20</span><span class="p">:][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">top_pos_words</span> <span class="o">=</span> <span class="p">[(</span><span class="n">idx2word</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">coefs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">top_pos_indices</span><span class="p">]</span>
+
+<span class="n">top_neg_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">coefs</span><span class="p">)[:</span><span class="mi">20</span><span class="p">]</span>
+<span class="n">top_neg_words</span> <span class="o">=</span> <span class="p">[(</span><span class="n">idx2word</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">coefs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">top_neg_indices</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Top 20 Positive Words ===&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="n">top_pos_words</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">word</span><span class="si">:</span><span class="s2">&lt;15</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">weight</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Top 20 Negative Words ===&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="n">top_neg_words</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">word</span><span class="si">:</span><span class="s2">&lt;15</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">weight</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>refreshing<span class="w">      </span><span class="m">3</span>.4152
+remarkable<span class="w">      </span><span class="m">3</span>.4090
+powerful<span class="w">        </span><span class="m">3</span>.2028
+hilarious<span class="w">       </span><span class="m">3</span>.1706
+beautiful<span class="w">       </span><span class="m">3</span>.0031
+wonderful<span class="w">       </span><span class="m">2</span>.9567
+prose<span class="w">           </span><span class="m">2</span>.9239
+appealing<span class="w">       </span><span class="m">2</span>.8553
+terrific<span class="w">        </span><span class="m">2</span>.8447
+treat<span class="w">           </span><span class="m">2</span>.7826
+enjoyable<span class="w">       </span><span class="m">2</span>.7641
+charmer<span class="w">         </span><span class="m">2</span>.7494
+vividly<span class="w">         </span><span class="m">2</span>.7119
+likable<span class="w">         </span><span class="m">2</span>.6818
+solid<span class="w">           </span><span class="m">2</span>.6587
+charming<span class="w">        </span><span class="m">2</span>.6485
+half-bad<span class="w">        </span><span class="m">2</span>.6182
+fascinating<span class="w">     </span><span class="m">2</span>.6124
+impressive<span class="w">      </span><span class="m">2</span>.5906
+intriguing<span class="w">      </span><span class="m">2</span>.5776
+
+<span class="o">===</span><span class="w"> </span>Top<span class="w"> </span><span class="m">20</span><span class="w"> </span>Negative<span class="w"> </span><span class="nv">Words</span><span class="w"> </span><span class="o">===</span>
+lacking<span class="w">         </span>-4.3342
+lacks<span class="w">           </span>-4.0458
+worst<span class="w">           </span>-3.9947
+devoid<span class="w">          </span>-3.6436
+mess<span class="w">            </span>-3.5915
+failure<span class="w">         </span>-3.5565
+stupid<span class="w">          </span>-3.3355
+bore<span class="w">            </span>-3.2426
+flat<span class="w">            </span>-3.2277
+depressing<span class="w">      </span>-3.1854
+loses<span class="w">           </span>-3.1598
+waste<span class="w">           </span>-3.1365
+hardly<span class="w">          </span>-3.0391
+lack<span class="w">            </span>-3.0281
+squanders<span class="w">       </span>-3.0261
+none<span class="w">            </span>-3.0259
+poor<span class="w">            </span>-2.9788
+pointless<span class="w">       </span>-2.9419
+unfortunately<span class="w">   </span>-2.9370
+lousy<span class="w">           </span>-2.9102
+</pre></div>
+</div>
+</section>
+<section id="id11">
+<h2>69. 正則化パラメータの変更<a class="headerlink" href="#id11" title="Link to this heading">#</a></h2>
+<p>ロジスティック回帰モデルを学習するとき, 正則化の係数 (ハイパーパラメータ) を調整することで, 学習時の適合度合いを制御できる.正則化の係数を変化させながらロジスティック回帰モデルを学習し, 検証データ上の正解率を求めよ.実験の結果は, 正則化パラメータを横軸, 正解率を縦軸としたグラフにまとめよ.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+
+<span class="k">def</span> <span class="nf">make_bow_dict_list</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">text_col</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">,</span> <span class="n">label_col</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">text</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">text_col</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="n">label_col</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">Counter</span><span class="p">(</span><span class="n">tokens</span><span class="p">))</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">label</span><span class="p">),</span> <span class="s2">&quot;feature&quot;</span><span class="p">:</span> <span class="n">feat</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">data</span>
+
+<span class="k">def</span> <span class="nf">dict_list_to_matrix</span><span class="p">(</span><span class="n">dict_list</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">):</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">dict_list</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">word2idx</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dict_list</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">cnt</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;feature&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">word2idx</span><span class="p">:</span>
+                <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">[</span><span class="n">w</span><span class="p">]]</span> <span class="o">=</span> <span class="n">cnt</span>
+        <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+<span class="n">train_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="s2">&quot;SST-2/train.tsv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">dev_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="s2">&quot;SST-2/dev.tsv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">train_list</span> <span class="o">=</span> <span class="n">make_bow_dict_list</span><span class="p">(</span><span class="n">train_df</span><span class="p">)</span>
+<span class="n">dev_list</span> <span class="o">=</span> <span class="n">make_bow_dict_list</span><span class="p">(</span><span class="n">dev_df</span><span class="p">)</span>
+
+<span class="n">vocab</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">train_list</span><span class="p">:</span>
+    <span class="n">vocab</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;feature&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="n">vocab_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">vocab</span><span class="p">)</span>
+<span class="n">word2idx</span> <span class="o">=</span> <span class="p">{</span><span class="n">w</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vocab_list</span><span class="p">)}</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">dict_list_to_matrix</span><span class="p">(</span><span class="n">train_list</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">)</span>
+<span class="n">X_dev</span><span class="p">,</span> <span class="n">y_dev</span> <span class="o">=</span> <span class="n">dict_list_to_matrix</span><span class="p">(</span><span class="n">dev_list</span><span class="p">,</span> <span class="n">word2idx</span><span class="p">)</span>
+
+<span class="n">C_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">accuracies</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">C</span> <span class="ow">in</span> <span class="n">C_values</span><span class="p">:</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_dev</span><span class="p">)</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_dev</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">accuracies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">acc</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;C=</span><span class="si">{</span><span class="n">C</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, Accuracy=</span><span class="si">{</span><span class="n">acc</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">C_values</span><span class="p">,</span> <span class="n">accuracies</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Regularization Parameter C (log scale)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Validation Accuracy&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Effect of Regularization on Logistic Regression Accuracy&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;cm.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="c" src="../../_images/cm.png" /></p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -483,6 +989,31 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">60. データの入手・整形</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">61. 特徴ベクトル</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">62. 学習</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">63. 予測</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">64. 条件付き確率</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">65. テキストのポジネガの予測</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">66. 混同行列の作成</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">67. 精度の計測</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">68. 特徴量の重みの確認</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">69. 正則化パラメータの変更</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

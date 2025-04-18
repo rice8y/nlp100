@@ -1,4 +1,4 @@
 nlp100-env/
-docs/ch05/JMMLU/
-docs/ch06/GoogleNews-vectors-negative300.bin.gz
-docs/ch06/questions-words.txt
+# docs/ch05/JMMLU/
+# docs/ch06/GoogleNews-vectors-negative300.bin.gz
+# docs/ch06/questions-words.txt
