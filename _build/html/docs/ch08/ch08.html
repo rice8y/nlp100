@@ -1113,9 +1113,37 @@ Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span
 <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">path_saved_model</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>修正中.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>Epoch<span class="w"> </span><span class="m">10</span><span class="o">]</span>
+Train<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.5800,<span class="w"> </span>Dev<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.6252
+Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.7714,<span class="w"> </span>Dev<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.6548
+<span class="o">[</span>Epoch<span class="w"> </span><span class="m">20</span><span class="o">]</span>
+Train<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.4502,<span class="w"> </span>Dev<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.5404
+Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8561,<span class="w"> </span>Dev<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.7603
+<span class="o">[</span>Epoch<span class="w"> </span><span class="m">30</span><span class="o">]</span>
+Train<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.3604,<span class="w"> </span>Dev<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.4802
+Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8805,<span class="w"> </span>Dev<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8073
+<span class="o">[</span>Epoch<span class="w"> </span><span class="m">40</span><span class="o">]</span>
+Train<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.3066,<span class="w"> </span>Dev<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.4413
+Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8945,<span class="w"> </span>Dev<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8211
+<span class="o">[</span>Epoch<span class="w"> </span><span class="m">50</span><span class="o">]</span>
+Train<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.2724,<span class="w"> </span>Dev<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.4249
+Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.9039,<span class="w"> </span>Dev<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8222
+<span class="o">[</span>Epoch<span class="w"> </span><span class="m">60</span><span class="o">]</span>
+Train<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.2485,<span class="w"> </span>Dev<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.4159
+Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.9121,<span class="w"> </span>Dev<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8257
+<span class="o">[</span>Epoch<span class="w"> </span><span class="m">70</span><span class="o">]</span>
+Train<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.2308,<span class="w"> </span>Dev<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.4122
+Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.9179,<span class="w"> </span>Dev<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8234
+<span class="o">[</span>Epoch<span class="w"> </span><span class="m">80</span><span class="o">]</span>
+Train<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.2167,<span class="w"> </span>Dev<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.4100
+Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.9229,<span class="w"> </span>Dev<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8211
+<span class="o">[</span>Epoch<span class="w"> </span><span class="m">90</span><span class="o">]</span>
+Train<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.2054,<span class="w"> </span>Dev<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.4107
+Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.9265,<span class="w"> </span>Dev<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8177
+<span class="o">[</span>Epoch<span class="w"> </span><span class="m">100</span><span class="o">]</span>
+Train<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.1960,<span class="w"> </span>Dev<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.4144
+Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.9297,<span class="w"> </span>Dev<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8131
+</pre></div>
 </div>
 </section>
 <section id="id9">
@@ -1288,9 +1316,37 @@ Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span
 <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">path_saved_model</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>修正中.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>Epoch<span class="w"> </span><span class="m">10</span><span class="o">]</span>
+Train<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.2846,<span class="w"> </span>Dev<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.4100
+Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8932,<span class="w"> </span>Dev<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8165
+<span class="o">[</span>Epoch<span class="w"> </span><span class="m">20</span><span class="o">]</span>
+Train<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.2158,<span class="w"> </span>Dev<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.4273
+Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.9208,<span class="w"> </span>Dev<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8119
+<span class="o">[</span>Epoch<span class="w"> </span><span class="m">30</span><span class="o">]</span>
+Train<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.1761,<span class="w"> </span>Dev<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.4495
+Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.9383,<span class="w"> </span>Dev<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8177
+<span class="o">[</span>Epoch<span class="w"> </span><span class="m">40</span><span class="o">]</span>
+Train<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.1492,<span class="w"> </span>Dev<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.4782
+Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.9488,<span class="w"> </span>Dev<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8131
+<span class="o">[</span>Epoch<span class="w"> </span><span class="m">50</span><span class="o">]</span>
+Train<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.1298,<span class="w"> </span>Dev<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.5264
+Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.9569,<span class="w"> </span>Dev<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8119
+<span class="o">[</span>Epoch<span class="w"> </span><span class="m">60</span><span class="o">]</span>
+Train<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.1139,<span class="w"> </span>Dev<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.5743
+Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.9627,<span class="w"> </span>Dev<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8085
+<span class="o">[</span>Epoch<span class="w"> </span><span class="m">70</span><span class="o">]</span>
+Train<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.1015,<span class="w"> </span>Dev<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.6285
+Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.9670,<span class="w"> </span>Dev<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8085
+<span class="o">[</span>Epoch<span class="w"> </span><span class="m">80</span><span class="o">]</span>
+Train<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.0902,<span class="w"> </span>Dev<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.6817
+Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.9704,<span class="w"> </span>Dev<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.8028
+<span class="o">[</span>Epoch<span class="w"> </span><span class="m">90</span><span class="o">]</span>
+Train<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.0823,<span class="w"> </span>Dev<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.7463
+Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.9733,<span class="w"> </span>Dev<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.7993
+<span class="o">[</span>Epoch<span class="w"> </span><span class="m">100</span><span class="o">]</span>
+Train<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.0758,<span class="w"> </span>Dev<span class="w"> </span>loss:<span class="w"> </span><span class="m">0</span>.7942
+Train<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.9756,<span class="w"> </span>Dev<span class="w"> </span>acc<span class="w"> </span>:<span class="w"> </span><span class="m">0</span>.7924
+</pre></div>
 </div>
 </section>
 </section>
