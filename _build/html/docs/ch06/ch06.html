@@ -450,14 +450,24 @@
 <section id="id2">
 <h2>50. 単語ベクトルの読み込みと表示<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
 <p>Google Newsデータセット (約1,000億単語) での<a class="reference external" href="https://drive.google.com/file/d/0B7XkCwpI5KDYNlNUTTlSS21pQmM/edit?usp=sharing">学習済み単語ベクトル</a> (300万単語・フレーズ, 300次元) をダウンロードし, &quot;United States&quot;の単語ベクトルを表示せよ. ただし, &quot;United States&quot;は内部的には&quot;United_States&quot;と表現されていることに注意せよ.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># !pip install gdown</span>
+<span class="c1"># !gdown https://drive.google.com/uc?id=0B7XkCwpI5KDYNlNUTTlSS21pQmM</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># !pip install gensim</span>
+</pre></div>
+</div>
+</div>
+</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gensim.models</span> <span class="kn">import</span> <span class="n">KeyedVectors</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
-<span class="k">def</span> <span class="nf">cos_sim</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v2</span><span class="p">))</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">KeyedVectors</span><span class="o">.</span><span class="n">load_word2vec_format</span><span class="p">(</span><span class="s2">&quot;GoogleNews-vectors-negative300.bin.gz&quot;</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s2">&quot;United_States&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -537,22 +547,6 @@
 <span class="w"> </span>-8.49609375e-02<span class="w">  </span><span class="m">1</span>.57470703e-02<span class="w">  </span><span class="m">7</span>.03125000e-02<span class="w">  </span><span class="m">1</span>.62353516e-02
 <span class="w"> </span>-2.27050781e-02<span class="w">  </span><span class="m">3</span>.51562500e-02<span class="w">  </span><span class="m">2</span>.47070312e-01<span class="w"> </span>-2.67333984e-02<span class="o">]</span>
 </pre></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># !pip install gdown</span>
-<span class="c1"># !gdown https://drive.google.com/uc?id=0B7XkCwpI5KDYNlNUTTlSS21pQmM</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># !pip install gensim</span>
-<span class="c1"># !pip install google</span>
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 <section id="id3">
